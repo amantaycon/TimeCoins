@@ -1,0 +1,84 @@
+.settings-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 32px;
+  background: linear-gradient(145deg, #ffffff, #e0f7fa);
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.settings-title {
+  font-size: 32px;
+  text-align: center;
+  color: #0288d1;
+  margin-bottom: 40px;
+}
+
+.settings-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 20px;
+  color: #0288d1;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #b2ebf2;
+  padding-bottom: 6px;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.settings-group label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #0288d1;
+}
+
+.settings-group input {
+  padding: 12px;
+  border: 1px solid #b2ebf2;
+  border-radius: 10px;
+  outline: none;
+  background-color: #f7fbfc;
+  font-size: 1rem;
+}
+
+.settings-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0f2f1;
+}
+
+.save-settings-button {
+  width: 100%;
+  background-color: #0288d1;
+  color: white;
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.save-settings-button:hover {
+  background-color: #0277bd;
+}
+
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .settings-title {
+    font-size: 24px;
+  }
+}

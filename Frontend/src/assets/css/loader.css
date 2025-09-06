@@ -1,0 +1,142 @@
+.loader-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: radial-gradient(circle at center, #ffffff, #eaf4ff, #d7ebff);
+  overflow: hidden;
+  position: relative;
+}
+
+/* White blinking layer (background breathing) */
+.loader-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.6), transparent 70%);
+  animation: blinkSky 4s infinite ease-in-out;
+  z-index: 0;
+}
+
+/* Core logo (sun) */
+.loader-core {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  z-index: 2;
+}
+
+.loader-logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* Soft moving rays around sun */
+.sun-rays {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%);
+  animation: raysAnim 5s infinite linear;
+  z-index: 1;
+}
+
+/* Orbit rings as loader lines */
+.orbit {
+  position: absolute;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  box-shadow: 0 0 12px rgba(255, 200, 0, 0.5);
+  animation: orbitPulse 2.5s infinite ease-in-out;
+}
+
+/* Each orbit different size + rotation */
+.orbit1 {
+  width: 140px;
+  height: 140px;
+  animation: rotate 6s linear infinite, orbitPulse 3s infinite ease-in-out;
+}
+.orbit2 {
+  width: 200px;
+  height: 200px;
+  animation: rotate 10s linear infinite reverse, orbitPulse 4s infinite ease-in-out;
+}
+.orbit3 {
+  width: 280px;
+  height: 280px;
+  animation: rotate 15s linear infinite, orbitPulse 5s infinite ease-in-out;
+}
+
+/* Text */
+.loader-text {
+  margin-top: 35px;
+  font-size: 1.3rem;
+  color: #333;
+  font-weight: 600;
+  font-family: "Segoe UI", sans-serif;
+  letter-spacing: 1px;
+}
+
+/* Animations */
+@keyframes rotate {
+  0%   { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 40px rgba(255, 200, 0, 0.8), 0 0 80px rgba(255, 180, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(255, 220, 0, 1), 0 0 120px rgba(255, 180, 0, 0.6);
+  }
+}
+
+@keyframes raysAnim {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50%  { transform: translate(-50%, -50%) scale(1.2); opacity: 0.3; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+}
+
+/* Orbit glowing pulse */
+@keyframes orbitPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 200, 0, 0.3); }
+  50%      { box-shadow: 0 0 20px rgba(255, 200, 0, 0.8); }
+}
+
+/* Background blink */
+@keyframes blinkSky {
+  0%   { opacity: 0.1; }
+  40%  { opacity: 0.8; }
+  55%  { opacity: 0.3; }
+  70%  { opacity: 1; }
+  100% { opacity: 0.1; }
+}
+
+.loader-text::after {
+  content: "...";
+  animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+  0%   { content: ""; }
+  33%  { content: "."; }
+  66%  { content: ".."; }
+  100% { content: "..."; }
+}

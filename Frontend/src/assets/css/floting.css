@@ -1,0 +1,97 @@
+.floating-user-search {
+  position: fixed;
+  top: 60px;
+  right: 40px;
+  width: 360px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  padding: 20px;
+  z-index: 9999;
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  outline: none;
+  margin-bottom: 16px;
+  transition: border 0.3s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  border-color: #0288d1;
+  background-color: #fff;
+  box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.2);
+}
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: #f1faff;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.user-card:hover {
+  background-color: #e1f5fe;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 14px;
+}
+
+.user-info .user-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #0288d1;
+}
+
+.user-info .user-username {
+  font-size: 0.85rem;
+  color: #4fc3f7;
+}
+
+/* Empty state */
+.no-results {
+  text-align: center;
+  color: #aaa;
+  font-size: 0.9rem;
+  padding-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .floating-user-search {
+    top: 20px;
+    right: 20px;
+    width: 90%;
+    max-height: 80vh;
+    padding: 16px;
+    border-radius: 16px;
+  }
+}

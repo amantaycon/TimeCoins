@@ -1,0 +1,184 @@
+
+
+/* Profile container */
+.profile-container {
+  max-width: 1000px;
+  margin: -120px auto 40px auto;
+  padding: 0 20px;
+  z-index: 2;
+}
+
+/* Header row */
+.profile-header {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* Profile picture */
+.profile-left {
+  flex: 0 0 150px;
+  display: flex;
+  justify-content: center;
+}
+.profile-pic {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  background: #f0f0f0;
+}
+
+/* Profile info */
+.profile-right {
+  flex: 1;
+  padding-left: 30px;
+}
+.profile-right h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+.username {
+  color: #555;
+  margin: 6px 0;
+  font-size: 16px;
+}
+.email {
+  color: #777;
+  margin: 4px 0;
+}
+.joined {
+  font-size: 14px;
+  color: #999;
+  margin-top: 8px;
+}
+
+/* About & Stats */
+.profile-info {
+  display: flex;
+  gap: 20px;
+  margin-top: 25px;
+}
+.about-card,
+.stats-card {
+  flex: 1;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+.about-card h3,
+.stats-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+.stats-card p {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+/* Future posts section */
+.future-components {
+  margin-top: 25px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  color: #666;
+  font-size: 15px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .profile-right {
+    padding-left: 0;
+    margin-top: 15px;
+  }
+  .profile-info {
+    flex-direction: column;
+  }
+}
+
+
+
+
+/* Profile Cover */
+.profile-cover {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, #0288d1, #26c6da);
+  border-radius: 0 0 20px 20px;
+  margin-bottom: 40px;
+}
+
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.profile-pic-icon {
+  width: 120px;
+  height: 120px;
+  color: #0288d1;
+}
+
+
+.profile-right .username {
+  color: #666;
+  margin: 5px 0;
+}
+.profile-right .email {
+  font-size: 0.95rem;
+  color: #444;
+}
+.profile-right .joined {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* About + Stats Row */
+.profile-info {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.about-card, .stats-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.about-card h3,
+.stats-card h3 {
+  margin-bottom: 12px;
+  color: #0288d1;
+}
+
+/* Future Section */
+.future-components {
+  padding: 30px;
+  text-align: center;
+  color: #555;
+  border: 2px dashed #b2ebf2;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.6);
+}
+
