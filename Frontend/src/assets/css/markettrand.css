@@ -1,0 +1,30 @@
+
+/* Dropdown styling */
+select {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+select:hover {
+  border-color: #0288d1;
+}
+
+select:focus {
+  outline: none;
+  border-color: #0288d1;
+  box-shadow: 0px 0px 4px rgba(2, 136, 209, 0.3);
+}
+
+/* Loading / no data text */
+.market-chart-card p {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 20px 0;
+  text-align: center;
+}

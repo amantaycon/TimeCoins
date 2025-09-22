@@ -1,81 +1,61 @@
-.splash-loader {
+.loader-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  width: 100vw;
-  background: #ffffff; /* or gradient */
-  overflow: hidden;
+  background: radial-gradient(circle at center, #f0f9ff, #bae6fd, #e0f2fe);
 }
 
-.logo-container {
-  position: relative;
-  width: 160px;
-  height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.infinity-path {
+  width: 320px;
+  height: 180px;
 }
 
-.logo {
-  width: 120px;
-  height: auto;
-  border-radius: 100%;
-  z-index: 2;
-  animation: pulseGlow 2s infinite ease-in-out;
+/* Glowing animated stroke */
+.animated-path {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 1000;
+  animation: dash 2s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
 }
 
-.wave {
-  position: absolute;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  border: 3px solid rgba(2, 136, 209, 0.4);
-  animation: ripple 2.5s infinite;
-  top: 0;
-  left: 0;
-  z-index: 1;
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
-.wave1 { animation-delay: 0s; }
-.wave2 { animation-delay: 0.8s; }
-.wave3 { animation-delay: 1.6s; }
+.loading-text {
+  margin-top: 30px;
+  color: #0369a1;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  animation: fade 1.5s infinite;
+}
 
-/* Glow on logo */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(2, 136, 209, 0.4),
-                0 0 20px rgba(2, 136, 209, 0.2);
+@keyframes fade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animated-path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: dash 3s linear infinite;
+  filter: drop-shadow(0 0 8px #38bdf8) drop-shadow(0 0 15px #0ea5e9);
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 600;
   }
   50% {
-    box-shadow: 0 0 20px rgba(2, 136, 209, 0.6),
-                0 0 40px rgba(2, 136, 209, 0.3);
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -600;
   }
 }
 
-/* Ripple animation */
-@keyframes ripple {
-  0% { transform: scale(0.6); opacity: 1; }
-  100% { transform: scale(2.5); opacity: 0; }
-}
-
-/* Loading text */
-.loading-text {
-  margin-top: 25px;
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #0288d1;
-}
-
-.dots::after {
-  content: '';
-  animation: dotsAnim 1.5s infinite steps(3);
-}
-
-@keyframes dotsAnim {
-  0% { content: ''; }
-  33% { content: '.'; }
-  66% { content: '..'; }
-  100% { content: '...'; }
-}

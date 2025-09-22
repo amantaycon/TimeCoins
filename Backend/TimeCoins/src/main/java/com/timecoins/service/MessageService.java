@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +27,7 @@ public class MessageService implements MessageServiceIn {
 	
     private final MessageHistoryRepository messageHistoryRepository;
     private final UserRepository userRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     /**
      * Get chat users with unread message counts (paginated)
@@ -57,37 +59,51 @@ public class MessageService implements MessageServiceIn {
     /**
      * Get paginated chat messages between two users
      */
+    @Override
     public Page<MessageTemplate> getChatMessages(Long senderId, Long receiverId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").ascending());
+    Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").ascending());
 
-        Page<MessageHistory> messageHistory = messageHistoryRepository
-                .findConversation(
-                        senderId, receiverId, pageable);
-        
-        if (messageHistory == null || messageHistory.isEmpty()) {
-            return Page.empty(pageable);
-        }
+    Page<MessageHistory> messageHistory = messageHistoryRepository
+            .findConversation(senderId, receiverId, pageable);
 
-        return messageHistory.map(m -> new MessageTemplate(
-                m.getId(),
-                m.getSenderId(),
-                m.getReceiverId(),
-                m.getContent(),
-                m.getTypeContent(),
-                m.getTimestamp(),
-                m.isRead()
-        ));
+    if (messageHistory == null || messageHistory.isEmpty()) {
+        return Page.empty(pageable);
     }
 
+    // Update delivered = true for all messages received by this user
+    List<MessageHistory> toUpdate = messageHistory.getContent().stream()
+            .filter(m -> m.getReceiverId().equals(receiverId) && !m.isDelivered())
+            .peek(m -> m.setDelivered(true))
+            .toList();
+
+    if (!toUpdate.isEmpty()) {
+        messageHistoryRepository.saveAll(toUpdate);
+    }
+
+    // Return as DTO Page
+    return messageHistory.map(m -> new MessageTemplate(
+            m.getId(),
+            m.getSenderId(),
+            m.getReceiverId(),
+            m.getContent(),
+            m.getTypeContent(),
+            m.getTimestamp(),
+            m.isRead(),
+            m.isDelivered()
+    ));
+    }
+
+    
     @Override
     public MessageTemplate pushMessage(MessageTemplate message, Long userId) {
+        // Security check: sender must match JWT userId
         if (!message.getSenderId().equals(userId)) {
             throw new ResponseStatusException(
                 HttpStatus.FORBIDDEN, "Unauthorized access"
             );
         }
 
-        // Build and save entity
+        // Save new message in DB (unread, not delivered)
         MessageHistory savedHistory = messageHistoryRepository.save(
             MessageHistory.builder()
                 .senderId(userId)
@@ -96,18 +112,51 @@ public class MessageService implements MessageServiceIn {
                 .typeContent(message.getType())
                 .timestamp(LocalDateTime.now())
                 .isRead(false)
+                .isDelivered(false)
                 .build()
         );
 
-        // Map back to DTO
+        // Try sending live if receiver is connected
+        boolean delivered = false;
+        try {
+            messagingTemplate.convertAndSendToUser(
+                savedHistory.getReceiverId().toString(),
+                "/queue/messages",
+                MessageTemplate.builder()
+                    .id(savedHistory.getId())
+                    .senderId(savedHistory.getSenderId())
+                    .receiverId(savedHistory.getReceiverId())
+                    .content(savedHistory.getContent())
+                    .type(savedHistory.getTypeContent())
+                    .timestamp(savedHistory.getTimestamp())
+                    .isRead(false)
+                    .isDelivered(false) // initially false
+                    .build()
+            );
+            delivered = true;
+        } catch (Exception e) {
+            // If user not connected → message stays only in DB
+        }
+
+        // If delivered, update entity
+        if (delivered) {
+            savedHistory.setDelivered(true);
+            savedHistory = messageHistoryRepository.save(savedHistory);
+        }
+
+        // Return DTO from final entity state
         return MessageTemplate.builder()
-                .id(savedHistory.getId()) // assuming MessageHistory has an auto-generated id
+                .id(savedHistory.getId())
                 .senderId(savedHistory.getSenderId())
                 .receiverId(savedHistory.getReceiverId())
                 .content(savedHistory.getContent())
                 .type(savedHistory.getTypeContent())
                 .timestamp(savedHistory.getTimestamp())
+                .isRead(savedHistory.isRead())
+                .isDelivered(savedHistory.isDelivered())
                 .build();
     }
+
+
 
 }

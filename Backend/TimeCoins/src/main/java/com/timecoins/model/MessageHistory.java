@@ -36,6 +36,9 @@ public class MessageHistory {
     private TypeContent typeContent;
 
     private LocalDateTime timestamp;
+    
+    @Column(name = "is_delivered")
+    private boolean isDelivered;
 
     @Column(name = "is_read")
     private boolean isRead;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axiosInstance from "../axios";
 import FloatingPayment from "./FloatingPayment";
 
-const MessageInput = ({ selectedUser, user }) => {
+const MessageInput = ({ selectedUser, user, messageData }) => {
   const [message, setMessage] = useState("");
   const [paymentPopup, setPaymentPopup] = useState(false);
 

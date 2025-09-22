@@ -369,3 +369,58 @@
   color: #991b1b;
 }
 
+.new-message-badge {
+  position: absolute;
+  bottom: 70px; /* just above input bar */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #02add147;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.3s;
+}
+.new-message-badge:hover {
+  background: #02add147;
+}
+
+/* For Chrome, Edge, Safari */
+.message-history::-webkit-scrollbar {
+  width: 6px;               /* thin width */
+}
+
+.message-history::-webkit-scrollbar-track {
+  background: #f1f1f1;       /* track background */
+  border-radius: 10px;
+}
+
+.message-history::-webkit-scrollbar-thumb {
+  background: #02add147;       /* your theme color */
+  border-radius: 10px;
+}
+
+.message-history::-webkit-scrollbar-thumb:hover {
+  background: #02add147;       /* darker on hover */
+}
+
+/* For Firefox */
+.message-history {
+  scrollbar-width: thin;                 /* thin scrollbar */
+  scrollbar-color: #02add147 #f1f1f1;      /* thumb color | track color */
+}
+
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.delivery-status {
+  font-size: 0.75rem;
+  color: gray;
+  margin-top: 2px;
+  text-align: right;
+  align-self: flex-end; /* force align right */
+}

@@ -8,10 +8,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.timecoins.dto.MessageTemplate;
 import com.timecoins.dto.UserTransactionDto;
 import com.timecoins.model.MessageHistory;
 import com.timecoins.model.TransactionType;
@@ -33,6 +35,7 @@ public class DataHandleServices implements DataHandleServicesIn {
     private final UserTransactionRepository userTransactionRepository;
     private final PasswordEncoder encoder;
     private final MessageHistoryRepository messageHistoryRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public String updateCoin(BigDecimal coins, Long id) {
@@ -99,27 +102,61 @@ public class DataHandleServices implements DataHandleServicesIn {
 
  // Helper method with builder
     private void saveTransaction(WebUsers sender, WebUsers receiver, BigDecimal amount, TransactionType type, String remark) {
+        LocalDateTime now = LocalDateTime.now();
+
+        // Save transaction
         UserTransaction tx = UserTransaction.builder()
                 .sender(sender)
                 .receiver(receiver)
                 .timecoins(amount)
                 .transactionType(type)
-                .transactionDate(LocalDateTime.now())
+                .transactionDate(now)
                 .description(remark)
                 .build();
 
         userTransactionRepository.save(tx);
-        
-        MessageHistory message = MessageHistory.builder()
-        		.senderId(sender.getId())
-        		.receiverId(receiver.getId())
-        		.content(remark+" --- "+amount)
-        		.typeContent(TypeContent.Money)
-        		.timestamp(LocalDateTime.now())
-        		.build();
-        messageHistoryRepository.save(message);
-        
+
+        // Save message in history (delivered = false by default)
+        MessageHistory savedHistory = messageHistoryRepository.save(
+            MessageHistory.builder()
+                .senderId(sender.getId())
+                .receiverId(receiver.getId())
+                .content(remark + " --- " + amount)
+                .typeContent(TypeContent.Money)
+                .timestamp(now)
+                .isRead(false)
+                .isDelivered(false)
+                .build()
+        );
+
+        // Build DTO
+        MessageTemplate dto = MessageTemplate.builder()
+                .id(savedHistory.getId())
+                .senderId(savedHistory.getSenderId())
+                .receiverId(savedHistory.getReceiverId())
+                .content(savedHistory.getContent())
+                .type(savedHistory.getTypeContent())
+                .timestamp(savedHistory.getTimestamp())
+                .isRead(savedHistory.isRead())
+                .isDelivered(false)
+                .build();
+
+        // ✅ Try sending live if user online
+        try {
+            messagingTemplate.convertAndSendToUser(
+                    dto.getReceiverId().toString(),
+                    "/queue/messages",
+                    dto
+            );
+
+            // Update delivery status
+            savedHistory.setDelivered(true);
+            messageHistoryRepository.save(savedHistory);
+        } catch (Exception e) {
+            // If user not connected → message stays only in DB
+        }
     }
+
 
 
     @Override

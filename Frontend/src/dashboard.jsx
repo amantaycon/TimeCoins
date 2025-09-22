@@ -53,7 +53,7 @@ const Dashboard = ({ user }) => {
               <div className="card-content">
                 <Wallet size={40} className="icon blue" />
                 <h2 className="card-title">Wallet Balance</h2>
-                <p className="card-text">Check your TimeCoin balance</p>
+                <p className="card-text">Check your TimeCoins balance</p>
               </div>
             </Link>
 
@@ -70,7 +70,7 @@ const Dashboard = ({ user }) => {
                 <Message size={40} className="icon green" />
                 {/* <span className="badge">3</span> */}
                 <h2 className="card-title">Messages</h2>
-                <p className="card-text">Chat with other TimeCoin users</p>
+                <p className="card-text">Chat with other TimeCoins users</p>
               </div>
             </Link>
 
@@ -86,7 +86,7 @@ const Dashboard = ({ user }) => {
               <div className="card-content">
                 <TrendingUp size={40} className="icon orange" />
                 <h2 className="card-title">Coin Value</h2>
-                <p className="card-text">Check TimeCoin market trends</p>
+                <p className="card-text">Check TimeCoins market trends</p>
               </div>
             </Link>
 

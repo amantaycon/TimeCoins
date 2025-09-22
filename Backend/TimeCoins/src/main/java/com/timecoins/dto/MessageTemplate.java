@@ -19,4 +19,5 @@ public class MessageTemplate {
 	private TypeContent type;
 	private LocalDateTime timestamp;
 	private boolean isRead;
+	private boolean isDelivered;
 }

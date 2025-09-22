@@ -1,17 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+// Fix SockJS expecting "global" in browser
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
-import { Provider } from 'react-redux'
-import { store } from './store'
-import App from './App.jsx'
+import { Provider } from "react-redux";
+import { store } from "./store";
+import App from "./App.jsx";
+import { WebSocketProvider } from "./context/WebSocketContext.jsx";
 
-
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
+      <WebSocketProvider>
+        <Router>
+          <App />
+        </Router>
+      </WebSocketProvider>
     </Provider>
-  </StrictMode>,
-)
+  </StrictMode>
+);

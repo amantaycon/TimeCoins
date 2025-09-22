@@ -10,12 +10,13 @@ import ConfirmEmail from "./confirmemail";
 import ResetPassword from "./ResetPassword";
 import Logout from "./logout";
 import Dashboard from "./dashboard";
-import SettingsPage from "./SettingsPage";
-import { WalletPage, TransactionHistoryPage, MarketTrendPage } from "./component/Component";
+import { WalletPage, TransactionHistoryPage } from "./component/Component";
 import MessagingPage from "./component/MessagingPage";
 import ProfilePage from "./component/ProfilePage";
 import "./app.css";
-import Logo from './assets/image/logosite-removebg-preview.png';
+import Logo from "./assets/image/logosite-removebg-preview.png";
+import MarketTrendPage from "./component/MarketTrendPage";
+import SettingsPage from "./component/SettingsPage";
 
 // Wrapper for protected routes
 function ProtectedRoute({ isAuthenticated, children }) {
@@ -51,24 +52,55 @@ function App() {
   }, [isAuthenticated]);
 
   if (loader) {
-  return (
-    <div className="splash-loader">
-      <div className="logo-container">
-        <img src={Logo} alt="TimeCoins Logo" className="logo" />
+    return (
+      <div className="loader-container">
+        <svg
+          className="infinity-path"
+          viewBox="0 0 300 150"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Infinity path */}
+          <path
+            id="infinity"
+            d="M50,75 
+             C50,20 120,20 150,75 
+             C180,130 250,130 250,75 
+             C250,20 180,20 150,75 
+             C120,130 50,130 50,75 Z"
+            stroke="url(#grad)"
+            strokeWidth="10"
+            fill="none"
+            strokeLinecap="round"
+            className="animated-path"
+          />
 
-        {/* Light wave ripples */}
-        <div className="wave wave1"></div>
-        <div className="wave wave2"></div>
-        <div className="wave wave3"></div>
+          {/* Gradient animation */}
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0ea5e9">
+                <animate
+                  attributeName="stop-color"
+                  values="#0ea5e9; #38bdf8; #0ea5e9"
+                  dur="1s"
+                  repeatCount="indefinite"
+                />
+              </stop>
+              <stop offset="100%" stopColor="#38bdf8">
+                <animate
+                  attributeName="stop-color"
+                  values="#38bdf8; #0ea5e9; #38bdf8"
+                  dur="1s"
+                  repeatCount="indefinite"
+                />
+              </stop>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <p className="loading-text">TimeCoins Loading...</p>
       </div>
-
-      {/* Animated Loading text */}
-      <p className="loading-text">Loading<span className="dots"></span></p>
-    </div>
-  );
-}
-
-
+    );
+  }
 
   return (
     <Routes>
@@ -82,7 +114,7 @@ function App() {
         }
       />
       <Route
-        path="/u/setting"
+        path="/u/settings"
         element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
             <SettingsPage user={user} />
@@ -106,7 +138,7 @@ function App() {
         }
       />
       <Route
-        path="/user/market/trends"
+        path="/u/market/trends"
         element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
             <MarketTrendPage user={user} />
@@ -174,7 +206,10 @@ function App() {
       />
 
       {/* Catch-all route */}
-      <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/u/login"} replace />} />
+      <Route
+        path="*"
+        element={<Navigate to={isAuthenticated ? "/" : "/u/login"} replace />}
+      />
     </Routes>
   );
 }

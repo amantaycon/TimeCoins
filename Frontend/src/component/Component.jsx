@@ -1,15 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { User, Wallet, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
 import Logo from "../assets/image/logosite-removebg-preview.png";
 import axios from "../axios";
 import axiosInstance from "../axios";
@@ -89,7 +80,7 @@ const HeadNav = ({ user }) => {
           <button
             className="nav-tab"
             onClick={() => {
-              navigate("/u/market");
+              navigate("/u/market/trends");
             }}
           >
             Market
@@ -361,43 +352,6 @@ const TransactionHistoryPage = ({ user }) => {
   );
 };
 
-const MarketTrendPage = ({ user }) => {
-  const data = [
-    { date: "Jul 01", value: 120 },
-    { date: "Jul 05", value: 150 },
-    { date: "Jul 10", value: 110 },
-    { date: "Jul 15", value: 160 },
-    { date: "Jul 20", value: 180 },
-    { date: "Jul 25", value: 140 },
-    { date: "Jul 30", value: 190 },
-  ];
 
-  return (
-    <div className="dashboard-bg">
-      <HeadNav user={user} />
-      <div className="dashboard-container">
-        <h1 className="dashboard-title">TimeCoin Market Trends</h1>
 
-        <div className="market-chart-card">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" stroke="#0288d1" />
-              <YAxis stroke="#0288d1" />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#0288d1"
-                strokeWidth={3}
-                dot={{ r: 5 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export { HeadNav, WalletPage, TransactionHistoryPage, MarketTrendPage };
+export { HeadNav, WalletPage, TransactionHistoryPage };
