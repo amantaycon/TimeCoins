@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import axiosInstance from "../axios";
 import FloatingPayment from "./FloatingPayment";
 
-const MessageInput = ({ selectedUser, user, messageData }) => {
+const MessageInput = ({
+  selectedUser,
+  user,
+  setMessageData,
+  scrollToBottom,
+}) => {
   const [message, setMessage] = useState("");
   const [paymentPopup, setPaymentPopup] = useState(false);
 
@@ -19,7 +24,11 @@ const MessageInput = ({ selectedUser, user, messageData }) => {
 
     try {
       const res = await axiosInstance.post("/u/message/push", messageJson);
-      console.log("Message sent:", res.data);
+      setMessageData((prev) => [...prev, res.data]);
+
+      setTimeout(() => {
+        scrollToBottom(true);
+      }, 50);
 
       setMessage(""); // clear input
     } catch (error) {
@@ -29,7 +38,15 @@ const MessageInput = ({ selectedUser, user, messageData }) => {
 
   return (
     <>
-    {paymentPopup && (<FloatingPayment selectedUser={selectedUser} user={user} onClose={()=>{setPaymentPopup(false)}} />)}
+      {paymentPopup && (
+        <FloatingPayment
+          selectedUser={selectedUser}
+          user={user}
+          onClose={() => {
+            setPaymentPopup(false);
+          }}
+        />
+      )}
       <div className="message-input-area">
         <input
           type="text"
@@ -40,7 +57,12 @@ const MessageInput = ({ selectedUser, user, messageData }) => {
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
         <div className="action-buttons">
-          <button className="coin-btn" onClick={()=>{setPaymentPopup(true)}}>
+          <button
+            className="coin-btn"
+            onClick={() => {
+              setPaymentPopup(true);
+            }}
+          >
             Pay <span className="coin-highlight">TC</span>
           </button>
           <button className="send-btn" onClick={sendMessage}>

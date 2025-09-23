@@ -214,7 +214,7 @@
 /* === Message Card Format === */
 .message-card {
   max-width: 70%;
-  padding: 12px 16px;
+  padding: 5px 10px;
   margin-bottom: 12px;
   border-radius: 16px;
   background-color: rgba(255, 255, 255, 0.95);
@@ -369,24 +369,6 @@
   color: #991b1b;
 }
 
-.new-message-badge {
-  position: absolute;
-  bottom: 70px; /* just above input bar */
-  left: 50%;
-  transform: translateX(-50%);
-  background: #02add147;
-  color: white;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
-  transition: background 0.3s;
-}
-.new-message-badge:hover {
-  background: #02add147;
-}
-
 /* For Chrome, Edge, Safari */
 .message-history::-webkit-scrollbar {
   width: 6px;               /* thin width */
@@ -423,4 +405,32 @@
   margin-top: 2px;
   text-align: right;
   align-self: flex-end; /* force align right */
+}
+
+.message-box {
+  position: relative; /* make children (badge) position relative to box */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.new-message-badge {
+  position: absolute;
+  bottom: 90px; /* above input bar */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #02add1;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s, transform 0.2s;
+  z-index: 10;
+}
+
+.new-message-badge:hover {
+  background: #0290ad;
+  transform: translateX(-50%) scale(1.05); /* small hover pop */
 }

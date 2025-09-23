@@ -511,6 +511,7 @@ a{
 }
 
 .user-list {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
@@ -670,6 +671,7 @@ a{
 
 /* Popup container */
 .floating-popup {
+  position: relative;
   background: #fff;
   width: 90%;
   max-width: 500px;   /* fixed width for center modal */

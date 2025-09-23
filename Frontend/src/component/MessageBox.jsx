@@ -42,16 +42,29 @@ const MessageBox = ({ selectedUser, user, onBack }) => {
       setMessages((prev) => [...prev, message]);
 
       if (isAtBottom()) {
-        // If user is already at bottom, scroll
         setTimeout(() => scrollToBottom(true), 50);
       } else {
-        // If user is reading older messages, show alert
         setShowNewMsgAlert(true);
       }
     });
 
     return () => subscription && subscription.unsubscribe();
   }, [connected, subscribe]);
+
+  // Detect manual scroll
+  useEffect(() => {
+    const historyEl = historyRef.current;
+    if (!historyEl) return;
+
+    const handleScroll = () => {
+      if (isAtBottom()) {
+        setShowNewMsgAlert(false); // hide badge when at bottom
+      }
+    };
+
+    historyEl.addEventListener("scroll", handleScroll);
+    return () => historyEl.removeEventListener("scroll", handleScroll);
+  }, [historyRef]);
 
   // Fetch history
   const messageHistory = async (id) => {
@@ -96,7 +109,14 @@ const MessageBox = ({ selectedUser, user, onBack }) => {
                   <span>{formatTime(msg.timestamp)}</span>
                 </div>
                 <div className="delivery-status">
-                  {msg.delivered && msg.senderId === user.id ? "✓" : ""}
+                  <div className="delivery-status">
+                    {msg.senderId === user.id &&
+                      (msg.read
+                        ? "Seen ✓✓"
+                        : msg.delivered
+                        ? "Delivered ✓"
+                        : "")}
+                  </div>
                 </div>
               </div>
             ))}
@@ -117,7 +137,12 @@ const MessageBox = ({ selectedUser, user, onBack }) => {
           )}
 
           {/* Input */}
-          <MessageInput selectedUser={selectedUser} user={user} messageData={setMessages} />
+          <MessageInput
+            selectedUser={selectedUser}
+            user={user}
+            setMessageData={setMessages}
+            scrollToBottom={scrollToBottom}
+          />
         </>
       ) : (
         <div className="select-user-placeholder">

@@ -148,6 +148,12 @@ public class DataHandleServices implements DataHandleServicesIn {
                     "/queue/messages",
                     dto
             );
+            
+            messagingTemplate.convertAndSendToUser(
+            		dto.getSenderId().toString(),
+            		"/queue/messages",
+            		dto
+            		);
 
             // Update delivery status
             savedHistory.setDelivered(true);
