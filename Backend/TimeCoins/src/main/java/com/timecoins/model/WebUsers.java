@@ -44,6 +44,14 @@ public class WebUsers {
 
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private List<UserTransaction> receivedTransactions;
+    
+    private String bio;
+    
+    private Boolean darkMode;
+    
+    private Boolean timeCoinsValueAlert;
+    
+    private Boolean notification;
 
 
     @PrePersist
@@ -51,5 +59,9 @@ public class WebUsers {
         this.createdAt = LocalDateTime.now();
         this.walletBalance = BigDecimal.ZERO;
         this.isVerified = false;
+        this.bio = "";
+        this.timeCoinsValueAlert = true;
+        this.darkMode = false;
+        this.notification = false;
     }
 }

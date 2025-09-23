@@ -1,28 +1,46 @@
 import React, { useState } from "react";
 import "../assets/css/SettingsPage.css";
 import { HeadNav } from "./Component";
+import axiosInstance from "../axios";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../store/authSlice";
 
-const SettingsPage = ({ user }) => {
-  const [fullName, setFullName] = useState(user.fullName || "");
-  const [bio, setBio] = useState(user.bio || ""); // new state for bio
-  const [darkMode, setDarkMode] = useState(false);
-  const [enableNotifications, setEnableNotifications] = useState(true);
-  const [receiveUpdates, setReceiveUpdates] = useState(true);
+const SettingsPage = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const [fullName, setFullName] = useState(user?.fullName || "");
+  const [bio, setBio] = useState(user?.bio || ""); // new state for bio
+  const [darkMode, setDarkMode] = useState(user?.darkMode || false);
+  const [enableNotifications, setEnableNotifications] = useState(
+    user?.webNotification || false
+  );
+  const [receiveUpdates, setReceiveUpdates] = useState(
+    user?.timeCoinsUpdateNotification || false
+  );
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-  const handleSave = () => {
-    // Here you can call your API to save the changes
+  const handleSave = async () => {
+  try {
     const updatedUser = {
+      id: user.id,
       fullName,
       bio,
       darkMode,
-      enableNotifications,
-      receiveUpdates,
+      webNotification: enableNotifications,
+      timeCoinsUpdateNotification: receiveUpdates,
     };
 
-    console.log("Updated user data:", updatedUser);
+    const response = await axiosInstance.post("/u/setting", updatedUser);
+
+    // update redux + localStorage
+    dispatch(updateUser(response.data));
     alert("Settings saved successfully!");
-  };
+  } catch (error) {
+    console.error("Error updating settings:", error);
+    alert("Failed to save settings. Please try again.");
+  }
+};
+
 
   return (
     <>

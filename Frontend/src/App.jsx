@@ -14,7 +14,6 @@ import { WalletPage, TransactionHistoryPage } from "./component/Component";
 import MessagingPage from "./component/MessagingPage";
 import ProfilePage from "./component/ProfilePage";
 import "./app.css";
-import Logo from "./assets/image/logosite-removebg-preview.png";
 import MarketTrendPage from "./component/MarketTrendPage";
 import SettingsPage from "./component/SettingsPage";
 

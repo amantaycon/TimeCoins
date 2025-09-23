@@ -10,6 +10,7 @@ import com.timecoins.dto.LoginInfo;
 import com.timecoins.dto.RagisterInfo;
 import com.timecoins.dto.RequestToken;
 import com.timecoins.dto.ResetPassword;
+import com.timecoins.dto.UsersDetails;
 import com.timecoins.service.UserServiceIn;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class LoginController {
     private final UserServiceIn userService;
 
     @PostMapping("/login")
-    public RagisterInfo login(@RequestBody LoginInfo user) {
+    public UsersDetails login(@RequestBody LoginInfo user) {
         return userService.login(user);
     }
 

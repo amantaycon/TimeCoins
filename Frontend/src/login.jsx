@@ -36,9 +36,10 @@ const AuthPage = () => {
       });
 
       const data = response.data;
-      const token = data.password; // token is store in password keyword
-      localStorage.setItem('userdata', JSON.stringify(data));
+      const token = data.token; // token is store in password keyword
       localStorage.setItem('jwtToken', token);
+      data.token = null;
+      localStorage.setItem('userdata', JSON.stringify(data));
       dispatch(loginSuccess({ token, user: data })); // Save in Redux
       console.log("Login successful");
       navigate('/');

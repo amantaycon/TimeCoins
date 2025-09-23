@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.timecoins.config.MailService;
 import com.timecoins.dto.LoginInfo;
 import com.timecoins.dto.RagisterInfo;
+import com.timecoins.dto.UsersDetails;
 import com.timecoins.model.WebUsers;
 import com.timecoins.repository.UserRepository;
 import com.timecoins.security.JwtUtil;
@@ -25,6 +26,32 @@ public class UserService implements UserServiceIn{
 	private final PasswordEncoder encoder;
 	private final JwtUtil jwt;
 	private final MailService mail;
+	
+	@Override
+	public UsersDetails updateSetting(UsersDetails usersDetails) {
+	    WebUsers user = repo.findById(usersDetails.getId())
+	        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+	    user.setFullName(usersDetails.getFullName());
+	    user.setBio(usersDetails.getBio());
+	    user.setDarkMode(usersDetails.getDarkMode());
+	    user.setNotification(usersDetails.getWebNotification());
+	    user.setTimeCoinsValueAlert(usersDetails.getTimeCoinsUpdateNotification());
+
+	    WebUsers updatedUser = repo.save(user);
+
+	    return UsersDetails.builder()
+	            .id(updatedUser.getId())
+	            .fullName(updatedUser.getFullName())
+	            .username(updatedUser.getUsername())
+	            .email(updatedUser.getEmail())
+	            .bio(updatedUser.getBio())
+	            .darkMode(updatedUser.getDarkMode())
+	            .webNotification(updatedUser.getNotification())
+	            .timeCoinsUpdateNotification(updatedUser.getTimeCoinsValueAlert())
+	            .build();
+	}
+
 	
 	
 	@Override
@@ -63,7 +90,7 @@ public class UserService implements UserServiceIn{
 
 	
 	@Override
-	public RagisterInfo login(LoginInfo user) {
+	public UsersDetails login(LoginInfo user) {
 		Optional<WebUsers> optionalUser = user.getLogin().contains("@")
                 ? repo.findByEmail(user.getLogin())
                 : repo.findByUsername(user.getLogin());
@@ -77,13 +104,17 @@ public class UserService implements UserServiceIn{
         if(!webuser.getIsVerified())
         	throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Please verify your email first");
 
-        return new RagisterInfo(
-        		webuser.getId(),
-        		webuser.getFullName(),
-        		webuser.getUsername(),
-        		webuser.getEmail(),
-        		jwt.generateToken(webuser.getEmail())
-        	);
+        return UsersDetails.builder()
+        		.id(webuser.getId())
+        		.fullName(webuser.getFullName())
+        		.username(webuser.getUsername())
+        		.email(webuser.getEmail())
+        		.token(jwt.generateToken(webuser.getEmail()))
+        		.bio(webuser.getBio())
+        		.darkMode(webuser.getDarkMode())
+        		.timeCoinsUpdateNotification(webuser.getTimeCoinsValueAlert())
+        		.webNotification(webuser.getNotification())
+        		.build();
 	}
 
 	@Override

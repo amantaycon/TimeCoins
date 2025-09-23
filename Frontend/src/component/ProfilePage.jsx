@@ -12,6 +12,7 @@ const ProfilePage = ({ user }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    console.log(user)
     const fetchUser = async () => {
       try {
         const res = await axiosInstance.get(`/u/userdetail/${username}`);
