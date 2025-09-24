@@ -202,3 +202,7 @@
   outline: none;
   box-shadow: 0 0 6px rgba(2, 136, 209, 0.3);
 }
+
+.fullname{
+  text-align: left;
+}

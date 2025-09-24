@@ -42,6 +42,19 @@ const SettingsPage = () => {
 };
 
 
+const resetLink = async () => {
+  const email = user.email;
+    try {
+      const response = await axiosInstance.post('/auth/forgotten_password', {
+        email
+      });
+      alert("Password reset link is send to your email id please check it.");
+      setShowPasswordModal(false);
+    } catch (error) {
+      console.error("Failed:", error.response?.data?.message || error.message);
+    }
+  }
+
   return (
     <>
       <HeadNav user={user} />
@@ -156,7 +169,7 @@ const SettingsPage = () => {
               <p>
                 We'll send a reset link to your email: <b>{user.email}</b>
               </p>
-              <button className="send-link-button">Send Reset Link</button>
+              <button className="send-link-button" onClick={resetLink}>Send Reset Link</button>
               <button
                 className="close-button"
                 onClick={() => setShowPasswordModal(false)}

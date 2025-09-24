@@ -9,10 +9,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.timecoins.config.MailService;
 import com.timecoins.dto.LoginInfo;
+import com.timecoins.dto.ProfileDetailDto;
 import com.timecoins.dto.RagisterInfo;
 import com.timecoins.dto.UsersDetails;
+import com.timecoins.model.TransactionType;
 import com.timecoins.model.WebUsers;
 import com.timecoins.repository.UserRepository;
+import com.timecoins.repository.UserTransactionRepository;
 import com.timecoins.security.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ public class UserService implements UserServiceIn{
 	private final PasswordEncoder encoder;
 	private final JwtUtil jwt;
 	private final MailService mail;
+	private final UserTransactionRepository userTransactionRepository;
 	
 	@Override
 	public UsersDetails updateSetting(UsersDetails usersDetails) {
@@ -166,24 +170,25 @@ public class UserService implements UserServiceIn{
 	}
 	
 	@Override
-	public RagisterInfo getUserDetail(String username) {
+	public ProfileDetailDto getUserDetail(String username) {
 	    Optional<WebUsers> user = repo.findByUsername(username);
 
 	    if (user.isPresent()) {
 	        WebUsers entity = user.get();
-	        
-	        // Map entity → DTO using builder
-	        return RagisterInfo.builder()
-	        		.id(entity.getId())
+
+	        Long transactionCount = userTransactionRepository
+	                .countTransfersByUserId(entity.getId(), TransactionType.TRANSFER);
+
+	        return ProfileDetailDto.builder()
 	                .fullName(entity.getFullName())
 	                .username(entity.getUsername())
-	                .email(entity.getEmail())
+	                .bio(entity.getBio())
+	                .joined(entity.getCreatedAt())
+	                .totalTransaction(transactionCount)
 	                .build();
 	    } else {
 	        return null; // or throw new UserNotFoundException(username);
 	    }
 	}
 
-
-	
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.timecoins.dto.RagisterInfo;
+import com.timecoins.dto.ProfileDetailDto;
 import com.timecoins.dto.UsersDetails;
 import com.timecoins.service.CustomUserDetails;
 import com.timecoins.service.UserServiceIn;
@@ -32,8 +32,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/userdetail/{username}")
-	public ResponseEntity<RagisterInfo> getUserDetail(@PathVariable String username) {
-	    RagisterInfo info = userService.getUserDetail(username);
+	public ResponseEntity<ProfileDetailDto> getUserDetail(@PathVariable String username) {
+	    ProfileDetailDto info = userService.getUserDetail(username);
 	    if (info == null) {
 	        return ResponseEntity.notFound().build();
 	    }

@@ -6,13 +6,17 @@ import axiosInstance from "../axios";
 import "../assets/css/profile.css";
 import Error404 from "./Error404";
 
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString();
+};
+
 const ProfilePage = ({ user }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log(user)
     const fetchUser = async () => {
       try {
         const res = await axiosInstance.get(`/u/userdetail/${username}`);
@@ -35,7 +39,7 @@ const ProfilePage = ({ user }) => {
       {/* Banner */}
       <div className="profile-cover">
         <div className="transactions-badge">
-          <span>{userData?.totalTransactions || 0}</span>
+          <span>{userData?.totalTransaction || 0}</span>
           <small>Transactions</small>
         </div>
       </div>
@@ -64,9 +68,6 @@ const ProfilePage = ({ user }) => {
                 <p className="username">@{userData?.username}</p>
               </div>
             </div>
-
-            {userData?.email && <p className="email">{userData.email}</p>}
-            <p className="joined">Joined: {userData?.joined || "Unknown"}</p>
           </div>
         </div>
 
@@ -76,11 +77,6 @@ const ProfilePage = ({ user }) => {
           <div className="about-card">
             <h3>About</h3>
             <p>{userData?.bio || "This user hasn't added a bio yet."}</p>
-            {userData?.location && (
-              <p className="info-line">
-                <MapPin size={16} /> {userData.location}
-              </p>
-            )}
             {userData?.role && (
               <p className="info-line">
                 <Briefcase size={16} /> {userData.role}
@@ -91,12 +87,8 @@ const ProfilePage = ({ user }) => {
           {/* Stats */}
           <div className="stats-card">
             <h3>Stats</h3>
-            <p>
-              <Coins size={16} /> Balance:{" "}
-              <strong>{userData?.balance || 0} TimeCoins</strong>
-            </p>
-            <p>Total Transactions: {userData?.totalTransactions || 0}</p>
-            <p>Member Since: {userData?.joined}</p>
+            <p>Total Transactions: {userData?.totalTransaction || 0}</p>
+            <p>Member Since: {formatDate(userData?.joined)}</p>
           </div>
         </div>
       </div>
