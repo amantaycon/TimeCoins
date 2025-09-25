@@ -14,8 +14,10 @@ import { HeadNav } from "./component/Component";
 import axios from "./axios";
 import AvatarColor from "./component/AvatarColor";
 import FloatingPopup from "./component/FloatingPopup";
+import { useSelector } from "react-redux";
 
-const Dashboard = ({ user }) => {
+const Dashboard = () => {
+  const user = useSelector((state) => state.auth.user);
   const [freqUser, setFreqUser] = useState([]);
 
   useEffect(() => {
@@ -114,7 +116,7 @@ const Dashboard = ({ user }) => {
             <>
               <div className="user-history-section">
                 <h2 className="section-title">User History</h2>
-                <div className="user-list">
+                <div className="dashboard-user-list">
                   {freqUser.map((user, index) => (
                     <Link to={`/${user.username}/message`} key={index} className="user-card pointer positionrelative">
                       {user.unreadCount != 0?<span className="badge">{user.unreadCount}</span>:<></>}
@@ -141,10 +143,11 @@ const Dashboard = ({ user }) => {
           {/* Footer */}
           <footer className="dashboard-footer">
             <div className="footer-links">
-              <Link to="/privacy">Privacy Policy</Link>
-              <Link to="/disclaimer">Disclaimer</Link>
-              <Link to="/about">About Us</Link>
-              <Link to="/contact">Contact</Link>
+              <Link to="/u/privacy">Privacy Policy</Link>
+              <Link to="/u/disclaimer">Disclaimer</Link>
+              <Link to="/u/term">Term & Conditions</Link>
+              <Link to="/u/about">About Us</Link>
+              <Link to="/u/contact">Contact</Link>
             </div>
             <p>© {new Date().getFullYear()} TimeCoins. All rights reserved.</p>
           </footer>

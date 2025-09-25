@@ -16,6 +16,9 @@ import ProfilePage from "./component/ProfilePage";
 import "./app.css";
 import MarketTrendPage from "./component/MarketTrendPage";
 import SettingsPage from "./component/SettingsPage";
+import CompanyList from "./component/CompanyList";
+import { AboutUs, ContactUs, Disclaimer, PrivacyPolicy, TermsAndConditions } from "./component/PrivacyConponent";
+import DocsLayout from "./component/DocsLayout";
 
 // Wrapper for protected routes
 function ProtectedRoute({ isAuthenticated, children }) {
@@ -108,7 +111,7 @@ function App() {
         path="/"
         element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
-            <Dashboard user={user} />
+            <Dashboard />
           </ProtectedRoute>
         }
       />
@@ -116,7 +119,7 @@ function App() {
         path="/u/settings"
         element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
-            <SettingsPage user={user} />
+            <SettingsPage />
           </ProtectedRoute>
         }
       />
@@ -133,6 +136,14 @@ function App() {
         element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
             <MessagingPage user={user} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/u/admin"
+        element={
+          <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <CompanyList />
           </ProtectedRoute>
         }
       />
@@ -203,6 +214,13 @@ function App() {
           </PublicRoute>
         }
       />
+
+      <Route path="/u/privacy" element={<PrivacyPolicy/>} />
+      <Route path="/u/disclaimer" element={<Disclaimer/>} />
+      <Route path="/u/about" element={<AboutUs/>} />
+      <Route path="/u/term" element={<TermsAndConditions/>} />
+      <Route path="/u/contact" element={<ContactUs/>} />
+      <Route path="/u/support" element={<DocsLayout/>} />
 
       {/* Catch-all route */}
       <Route

@@ -5,8 +5,10 @@ import MessageBox from "./MessageBox";
 import { HeadNav } from "./Component";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../axios";
+import { useSelector } from "react-redux";
 
-const MessagingPage = ({ user }) => {
+const MessagingPage = () => {
+  const user = useSelector((state) => state.auth.user);
   const [selectedUser, setSelectedUser] = useState(null);
   const { username } = useParams();
   const navigate = useNavigate();
@@ -36,7 +38,7 @@ const MessagingPage = ({ user }) => {
 
   return (
     <>
-      <HeadNav user={user} />
+      <HeadNav />
       <div
         className={`messaging-page ${
           selectedUser ? "show-message-box" : "show-user-list"

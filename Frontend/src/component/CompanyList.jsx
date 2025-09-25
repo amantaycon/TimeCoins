@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../assets/css/companylist.css";
+import { useSelector } from "react-redux";
+import Error404 from "./Error404";
+import axiosInstance from "../axios";
 
 const gradients = [
   "linear-gradient(90deg, #667eea, #764ba2)", // purple-blue
@@ -9,7 +12,23 @@ const gradients = [
   "linear-gradient(90deg, #f7971e, #ffd200)", // yellow-orange
 ];
 
-const CompanyList = ({ companyList }) => {
+const CompanyList = () => {
+  const user = useSelector((state) => state.auth.user);
+    const [companyList, setCompanyDetail] = useState([]);
+
+  useEffect(() => {
+    const companiesName = async () => {
+      try {
+        const res = await axiosInstance.get("/value/company/list");
+        setCompanyDetail(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    companiesName();
+  }, []);
+
   return (
     <div className="company-list-wrapper">
       <h1 className="company-header">Coin Linked Companies</h1>

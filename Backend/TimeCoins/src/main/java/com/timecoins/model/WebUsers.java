@@ -52,6 +52,8 @@ public class WebUsers {
     private Boolean timeCoinsValueAlert;
     
     private Boolean notification;
+    
+    private Boolean admin;
 
 
     @PrePersist
@@ -63,5 +65,6 @@ public class WebUsers {
         this.timeCoinsValueAlert = true;
         this.darkMode = false;
         this.notification = false;
+        this.admin = false;
     }
 }

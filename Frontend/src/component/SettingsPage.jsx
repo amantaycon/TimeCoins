@@ -57,7 +57,7 @@ const resetLink = async () => {
 
   return (
     <>
-      <HeadNav user={user} />
+      <HeadNav />
       <div className="settings-container">
         <h1 className="settings-title">Settings</h1>
 

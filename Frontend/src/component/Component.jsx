@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../assets/image/logosite-removebg-preview.png";
 import axios from "../axios";
 import axiosInstance from "../axios";
+import { useSelector } from "react-redux";
 
-const HeadNav = ({ user }) => {
+const HeadNav = () => {
+  const user = useSelector((state) => state.auth.user);
   const username = user.username;
   const [menuOpen, setMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -110,6 +112,15 @@ const HeadNav = ({ user }) => {
                 >
                   My Profile
                 </button>
+                {user.admin && (
+                  <button
+                  onClick={() => {
+                    navigate(`/u/admin`);
+                  }}
+                >
+                  Admin Panel
+                </button>
+                )}
                 <button
                   onClick={() => {
                     navigate(`/u/settings`);
@@ -182,7 +193,8 @@ const HeadNav = ({ user }) => {
   );
 };
 
-const WalletPage = ({ user }) => {
+const WalletPage = () => {
+  const user = useSelector((state) => state.auth.user);
   const [amount, setAmount] = useState();
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
@@ -276,7 +288,8 @@ const WalletPage = ({ user }) => {
   );
 };
 
-const TransactionHistoryPage = ({ user }) => {
+const TransactionHistoryPage = () => {
+  const user = useSelector((state) => state.auth.user);
   const [transactions, setTransactions] = useState([]);
 
   const loadTransaction = async (page) => {

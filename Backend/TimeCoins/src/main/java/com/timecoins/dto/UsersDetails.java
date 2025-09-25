@@ -17,4 +17,5 @@ public class UsersDetails {
 	private Boolean webNotification;
 	private Boolean timeCoinsUpdateNotification;
 	private Boolean darkMode;
+	private Boolean admin;
 }

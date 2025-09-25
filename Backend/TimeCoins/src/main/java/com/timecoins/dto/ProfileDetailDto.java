@@ -10,6 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class ProfileDetailDto {
+	private Long id;
 	private String fullName;
 	private String username;
 	private String bio;

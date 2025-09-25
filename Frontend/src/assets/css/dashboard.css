@@ -510,7 +510,7 @@ a{
   text-align: center;
 }
 
-.user-list {
+.dashboard-user-list {
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

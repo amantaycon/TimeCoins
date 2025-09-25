@@ -23,28 +23,32 @@ public class LoginController {
     private final UserServiceIn userService;
 
     @PostMapping("/login")
-    public UsersDetails login(@RequestBody LoginInfo user) {
+    public UsersDetails login(@RequestBody LoginInfo user) throws InterruptedException {
+    	Thread.sleep(2000);
         return userService.login(user);
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RagisterInfo user) {
+    public String register(@RequestBody RagisterInfo user) throws InterruptedException {
+    	Thread.sleep(2000);
         return userService.ragister(user);
     }
 
     @PostMapping("/forgotten_password")
-    public String forgottenPassword(@RequestBody Forgotten_Password user) {
-    	System.out.println(user);
+    public String forgottenPassword(@RequestBody Forgotten_Password user) throws InterruptedException {
+    	Thread.sleep(2000);
         return userService.forgotten_password(user.getEmail());
     }
     
     @PostMapping("/reset")
-    public String resetPassword(@RequestBody ResetPassword req) {
+    public String resetPassword(@RequestBody ResetPassword req) throws InterruptedException {
+    	Thread.sleep(1000);
         return userService.resetPassword(req.getToken(), req.getNewPassword());
     }
     
     @PostMapping("/verify")
-    public String verifyEmail(@RequestBody RequestToken req) {
+    public String verifyEmail(@RequestBody RequestToken req) throws InterruptedException {
+    	Thread.sleep(1000);
     	return userService.confirmEmail(req.getToken());
     }
 }

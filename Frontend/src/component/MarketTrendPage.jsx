@@ -18,7 +18,6 @@ const MarketTrendPage = ({ user }) => {
   const [range, setRange] = useState("1m");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [companyDetail, setCompanyDetail] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -59,22 +58,11 @@ const MarketTrendPage = ({ user }) => {
     };
   }, [range]);
 
-  useEffect(() => {
-    const companiesName = async () => {
-      try {
-        const res = await axiosInstance.get("/value/company/list");
-        setCompanyDetail(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    companiesName();
-  }, []);
+  
 
   return (
     <div className="dashboard-bg">
-      <HeadNav user={user} />
+      <HeadNav />
 
       <div className="dashboard-container">
         <h1 className="dashboard-title">TimeCoins Market Trends</h1>
@@ -118,7 +106,7 @@ const MarketTrendPage = ({ user }) => {
             </ResponsiveContainer>
           )}
         </div>
-        <CompanyList companyList={companyDetail} />
+        <CompanyList />
       </div>
     </div>
   );

@@ -118,6 +118,7 @@ public class UserService implements UserServiceIn{
         		.darkMode(webuser.getDarkMode())
         		.timeCoinsUpdateNotification(webuser.getTimeCoinsValueAlert())
         		.webNotification(webuser.getNotification())
+        		.admin(webuser.getAdmin())
         		.build();
 	}
 
@@ -180,6 +181,7 @@ public class UserService implements UserServiceIn{
 	                .countTransfersByUserId(entity.getId(), TransactionType.TRANSFER);
 
 	        return ProfileDetailDto.builder()
+	        		.id(entity.getId())
 	                .fullName(entity.getFullName())
 	                .username(entity.getUsername())
 	                .bio(entity.getBio())
