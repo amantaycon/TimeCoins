@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { User, Wallet, Menu } from "lucide-react";
+import { User, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/image/logosite-removebg-preview.png";
-import axios from "../axios";
 import axiosInstance from "../axios";
 import { useSelector } from "react-redux";
 
@@ -193,101 +192,6 @@ const HeadNav = () => {
   );
 };
 
-const WalletPage = () => {
-  const user = useSelector((state) => state.auth.user);
-  const [amount, setAmount] = useState();
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState([]);
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        const response = await axios.post("/u/balance");
-        const userBalance = response.data.coin || 0;
-        setBalance(userBalance);
-      } catch (error) {
-        console.error("Failed to fetch balance:", error);
-        setBalance(0); // fallback
-      }
-
-      try {
-        const res = await axios.post("/u/external/transation_list");
-        // const data = res.data || null;
-        // setTransactions(data);
-      } catch (error) {
-        console.error("Failed to fetch Transation history:", error);
-        // setTransactions(null);
-      }
-    };
-
-    fetchBalance();
-  }, []);
-
-  // Add money handler
-  const handleAddMoney = async () => {
-    if (amount > 0) {
-      try {
-        await axios.post("/u/update_balance", { coin: amount });
-        setAmount(0);
-        // Re-fetch balance
-        const response = await axios.post("/u/balance");
-        const updatedBalance = response.data.coin || 0;
-        setBalance(updatedBalance);
-      } catch (error) {
-        console.error("Failed to update balance:", error);
-      }
-    }
-  };
-
-  return (
-    <div className="dashboard-bg">
-      <HeadNav user={user} />
-      <div className="dashboard-container">
-        <h1 className="dashboard-title">My Wallet</h1>
-        <div className="wallet-section">
-          <div className="wallet-balance-card">
-            <Wallet size={40} className="icon blue" />
-            <h2>Current Balance</h2>
-            <p className="wallet-amount">TC {balance}</p>
-          </div>
-
-          <div className="wallet-add-money">
-            <h3>Add Money to Wallet</h3>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
-              placeholder="Enter amount"
-            />
-            <button onClick={handleAddMoney} className="wallet-add-button">
-              Add Money
-            </button>
-          </div>
-        </div>
-
-        <div className="wallet-transactions">
-          <h3>Transaction History</h3>
-          {transactions.length === 0 ? (
-            <p>No transactions yet.</p>
-          ) : (
-            <ul>
-              {transactions.map((tx, idx) => (
-                <li key={idx} className="transaction-item">
-                  <span className={`tx-type ${tx.type.toLowerCase()}`}>
-                    {tx.type}
-                  </span>
-                  <span>₹{tx.amount}</span>
-                  <span>{tx.date}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const TransactionHistoryPage = () => {
   const user = useSelector((state) => state.auth.user);
   const [transactions, setTransactions] = useState([]);
@@ -367,4 +271,4 @@ const TransactionHistoryPage = () => {
 
 
 
-export { HeadNav, WalletPage, TransactionHistoryPage };
+export { HeadNav, TransactionHistoryPage };

@@ -10,7 +10,7 @@ import ConfirmEmail from "./confirmemail";
 import ResetPassword from "./ResetPassword";
 import Logout from "./logout";
 import Dashboard from "./dashboard";
-import { WalletPage, TransactionHistoryPage } from "./component/Component";
+import { TransactionHistoryPage } from "./component/Component";
 import MessagingPage from "./component/MessagingPage";
 import ProfilePage from "./component/ProfilePage";
 import "./app.css";
@@ -19,6 +19,7 @@ import SettingsPage from "./component/SettingsPage";
 import CompanyList from "./component/CompanyList";
 import { AboutUs, ContactUs, Disclaimer, PrivacyPolicy, TermsAndConditions } from "./component/PrivacyConponent";
 import DocsLayout from "./component/DocsLayout";
+import WalletPage from "./component/WalletPage";
 
 // Wrapper for protected routes
 function ProtectedRoute({ isAuthenticated, children }) {

@@ -1,5 +1,7 @@
 package com.timecoins.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +19,12 @@ public interface UserTransactionRepository extends JpaRepository<UserTransaction
 		       "AND (t.sender.id = :userId OR t.receiver.id = :userId)")
 		Long countTransfersByUserId(@Param("userId") Long userId,
 		                            @Param("type") TransactionType type);
+	
+	@Query("SELECT t FROM UserTransaction t " +
+	           "WHERE t.receiver.id = :receiverId " +
+	           "AND t.transactionType IN (:types)")
+	    Page<UserTransaction> findByReceiverIdAndTransactionTypes(@Param("receiverId") Long receiverId,
+	                                                              @Param("types") List<TransactionType> types,
+	                                                              Pageable pageable);
 
 }

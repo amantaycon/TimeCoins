@@ -2,6 +2,7 @@ package com.timecoins.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -184,6 +185,28 @@ public class DataHandleServices implements DataHandleServicesIn {
                 .description(tx.getDescription())
                 .build()
         );
+    }
+    
+    @Override
+    public Page<UserTransactionDto> getListOfTransactionOutsideMoney(Long id, int page, int size){
+    	Pageable pageable = PageRequest.of(page, size, Sort.by("transactionDate").descending());
+    	Page<UserTransaction> outsideTransation = 
+    			userTransactionRepository.findByReceiverIdAndTransactionTypes(
+    					id, List.of(
+    							TransactionType.WITHDRAWAL,TransactionType.DEPOSIT), pageable);
+    	
+    	return outsideTransation.map(tx-> UserTransactionDto.builder()
+    			.id(tx.getId())
+    			.senderId(tx.getSender() != null ? tx.getSender().getId() : null)
+                .receiverId(tx.getReceiver() != null ? tx.getReceiver().getId() : null)
+                .senderUsername(tx.getSender().getUsername())
+                .receiverUsername(tx.getReceiver().getUsername())
+                .amount(tx.getTimecoins())
+                .type(tx.getTransactionType())
+                .transactionDate(tx.getTransactionDate())
+                .description(tx.getDescription())
+                .build()
+    			);
     }
 
 }

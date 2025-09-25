@@ -1,0 +1,159 @@
+/* Wallet Section */
+.wallet-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .wallet-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.wallet-balance-card,
+.wallet-add-money,
+.wallet-transactions {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 1.5rem;
+}
+
+.wallet-balance-card h2 {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.wallet-amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  color: #2563eb;
+}
+
+/* Add Money */
+.wallet-add-money input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+}
+
+.wallet-add-money input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+}
+
+.wallet-add-button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.wallet-add-button:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+.wallet-add-button:hover:not(:disabled) {
+  background: #1e40af;
+}
+
+/* Transactions */
+.wallet-transactions ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.tx-type {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.tx-type.credit {
+  color: green;
+}
+
+.tx-type.debit {
+  color: red;
+}
+
+/* === MODAL STYLES === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  padding: 1.5rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-box h2 {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.modal-box p {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-actions .cancel-btn {
+  background: #e5e7eb;
+  color: #111;
+}
+
+.modal-actions .cancel-btn:hover {
+  background: #d1d5db;
+}

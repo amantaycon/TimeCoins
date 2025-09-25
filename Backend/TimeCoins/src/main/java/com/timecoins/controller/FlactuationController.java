@@ -1,5 +1,6 @@
 package com.timecoins.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,10 @@ public class FlactuationController {
 		return valueFluctuationServiceIn.getListOfCompany();
 	}
 	
+	@GetMapping("/inrupees")
+	public BigDecimal getValueInRuppes() {
+		return valueFluctuationServiceIn.getCoinValueInRuppees();
+	}
 	
 	
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,18 @@ public class HomeController {
 	
 	private final MessageServiceIn messageServiceIn;
 	private final DataHandleServicesIn dataHandleServicesIn;
+	
+	@GetMapping("/u/external/transaction_list")
+	public Page<UserTransactionDto> getListOfOutsideTransation(
+			@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            Authentication authentication
+			){
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+	    Long userId = userDetails.getId();
+		
+		return dataHandleServicesIn.getListOfTransactionOutsideMoney(userId, page, size);
+	}
 	
 	@PostMapping("/u/process/transaction")
 	public ResponseEntity<String> processTransaction(
@@ -147,16 +160,10 @@ public class HomeController {
 	    return ResponseEntity.ok(messageServiceIn.getChatUsersWithUnread(userId, page, size));
 	}
 	
-	@PostMapping("/u/balance")
+	@GetMapping("/u/balance")
 	public GetCoins getBalance(Authentication authentication) {
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		return new GetCoins(userDetails.getWalletBalance());
-	}
-	
-	@PostMapping("/u/update_balance")
-	public String updateBalance(@RequestBody GetCoins coin,Authentication authentication) {
-		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-		return dataHandleServicesIn.updateCoin(coin.getCoin(), userDetails.getId());
 	}
 	
 }

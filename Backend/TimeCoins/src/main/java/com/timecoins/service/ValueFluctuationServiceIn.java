@@ -16,4 +16,5 @@ public interface ValueFluctuationServiceIn {
     );
 	public List<AggregatedCoinHistoryDto> getListOfValueHistory(String range);
 	public List<CompanyListDto> getListOfCompany();
+	public BigDecimal getCoinValueInRuppees();
 }

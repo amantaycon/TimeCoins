@@ -30,6 +30,12 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
     private final TotalTimeCoinsRepository totalTimeCoinsRepository;
     
     @Override
+    public BigDecimal getCoinValueInRuppees() {
+    	CoinsValueHistory value = coinsValueHistoryRepository.findTopByOrderByIdDesc();
+    	return value.getValueInRupees();
+    }
+    
+    @Override
     public List<CompanyListDto> getListOfCompany(){
     	List<CompanyList> companyLists = companyListRepository.findAll();
     	
