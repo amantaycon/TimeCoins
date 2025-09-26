@@ -6,6 +6,7 @@ import { HeadNav } from "./Component";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../axios";
 import { useSelector } from "react-redux";
+import { WebSocketProvider } from "../context/WebSocketContext";
 
 const MessagingPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -50,11 +51,13 @@ const MessagingPage = () => {
         />
 
         {/* Message Box */}
+        <WebSocketProvider>
         <MessageBox
           selectedUser={selectedUser}
           user={user}
           onBack={handleBack}
         />
+        </WebSocketProvider>
       </div>
     </>
   );

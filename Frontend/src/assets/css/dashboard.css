@@ -616,6 +616,8 @@ a{
   border-radius: 50%;
   font-size: 12px;
   padding: 2px 6px;
+  height: 12px;
+  width: 10px;
 }
 
 .section-title {

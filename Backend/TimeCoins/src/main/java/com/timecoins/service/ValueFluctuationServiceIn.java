@@ -7,14 +7,9 @@ import com.timecoins.dto.AggregatedCoinHistoryDto;
 import com.timecoins.dto.CompanyListDto;
 
 public interface ValueFluctuationServiceIn {
-	public boolean addNewCompanyShares(
-            String companyName,
-            String tickerSymbol,
-            BigDecimal sharePrice,
-            BigDecimal shareToken,
-            BigDecimal totalToken
-    );
-	public List<AggregatedCoinHistoryDto> getListOfValueHistory(String range);
-	public List<CompanyListDto> getListOfCompany();
+	public CompanyListDto addCompany(CompanyListDto companyDetails,Long userId);
 	public BigDecimal getCoinValueInRuppees();
+	public List<CompanyListDto> getListOfCompany();
+	public List<AggregatedCoinHistoryDto> getListOfValueHistory(String range);
+	public boolean approveCompany(Long id, Long userId);
 }

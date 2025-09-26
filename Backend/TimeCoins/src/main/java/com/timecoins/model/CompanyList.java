@@ -32,6 +32,9 @@ public class CompanyList {
     private BigDecimal shareToken;  // Percentage weight in TimeCoins
     private BigDecimal totalToken;
     private BigDecimal timeCoins;    // Current TimeCoins value mapped to this company
+    private Boolean approve;
+    private String email;
+    private String website;
     
     private LocalDateTime createdAt;
     

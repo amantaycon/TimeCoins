@@ -12,9 +12,8 @@ const gradients = [
   "linear-gradient(90deg, #f7971e, #ffd200)", // yellow-orange
 ];
 
-const CompanyList = () => {
+const CompanyList = ({ companyList, setCompanyDetail }) => {
   const user = useSelector((state) => state.auth.user);
-    const [companyList, setCompanyDetail] = useState([]);
 
   useEffect(() => {
     const companiesName = async () => {
@@ -28,6 +27,28 @@ const CompanyList = () => {
 
     companiesName();
   }, []);
+
+  const handleApprove = async (id) => {
+    try {
+      await axiosInstance.put(`/value/company/approve/${id}`);
+      // refresh list
+      const res = await axiosInstance.get("/value/company/list");
+      setCompanyDetail(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleVote = async (id, type) => {
+    try {
+      await axiosInstance.post(`/value/company/vote/${id}/${type}`);
+      // refresh list
+      const res = await axiosInstance.get("/value/company/list");
+      setCompanyDetail(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="company-list-wrapper">
@@ -63,6 +84,43 @@ const CompanyList = () => {
                 <p className="company-date">
                   {new Date(company.createAt).toLocaleDateString()}
                 </p>
+              </div>
+
+              {/* Approve or Vote buttons */}
+              <div className="company-actions">
+                {/* Approval section */}
+                {company.approve ? (
+                  <button className="approve-btn" disabled>
+                    ✅ Approved
+                  </button>
+                ) : user?.admin ? (
+                  <button
+                    className={"approve-btn " + (user?.admin ?"approve-btn1":"")}
+                    onClick={() => handleApprove(company.id)}
+                  >
+                    Approve
+                  </button>
+                ) : (
+                  <button className="approve-btn" disabled>
+                    ❌ Not Approved
+                  </button>
+                )}
+
+                {/* Voting section (everyone can vote) */}
+                <div className="vote-buttons">
+                  <button
+                    className="upvote-btn"
+                    onClick={() => handleVote(company.id, "up")}
+                  >
+                    👍 Upvote
+                  </button>
+                  <button
+                    className="downvote-btn"
+                    onClick={() => handleVote(company.id, "down")}
+                  >
+                    👎 Downvote
+                  </button>
+                </div>
               </div>
             </div>
           ))

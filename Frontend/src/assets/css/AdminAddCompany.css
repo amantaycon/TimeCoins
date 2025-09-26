@@ -1,0 +1,186 @@
+/* Main container */
+.admin-container {
+  padding: 20px;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  color: #111827;
+}
+
+/* Center the Add Company button */
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.add-company-btn {
+  background: linear-gradient(135deg,  #088eac, #02c3d1);
+  color: white;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0px 6px 18px rgba(37, 99, 235, 0.3);
+  transition: all 0.3s ease;
+}
+
+.add-company-btn:hover {
+  background: linear-gradient(135deg,#076175, #07656c);
+  transform: translateY(-2px);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  padding: 20px;
+}
+
+/* Modal Box */
+.modal-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 650px;
+  height: 80vh;               /* fixed height (80% of screen) */
+  padding: 20px 24px;
+  border-radius: 16px;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Scrollable content inside modal */
+.company-form {
+  flex: 1;                    /* take remaining space */
+  overflow-y: auto;           /* scroll only inside form */
+  padding-right: 6px;         /* space for scrollbar */
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Title */
+.modal-title {
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0288d1;
+}
+
+/* Form inputs */
+.company-form label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.company-form input {
+  padding: 11px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.company-form input:focus {
+  border-color: #0288d1;
+  box-shadow: 0 0 0 2px rgba(37, 192, 235, 0.2);
+}
+
+/* Actions always stay at bottom */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.submit-btn,
+.cancel-btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn {
+  background: #0288d1;
+  color: #fff;
+}
+
+.submit-btn:hover {
+  background: #0e6b7e;
+}
+
+.cancel-btn {
+  background: #ef4444;
+  color: #fff;
+}
+
+.cancel-btn:hover {
+  background: #dc2626;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .modal-content {
+    max-width: 95%;
+    height: 85vh;
+    padding: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+/* Customize Scrollbar for the form */
+.company-form::-webkit-scrollbar {
+  width: 8px;                /* scrollbar width */
+}
+
+.company-form::-webkit-scrollbar-track {
+  background: #f1f5f9;        /* light gray background */
+  border-radius: 10px;
+}
+
+.company-form::-webkit-scrollbar-thumb {
+  background: #0288d1;        /* blue scrollbar thumb */
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.company-form::-webkit-scrollbar-thumb:hover {
+  background: #0288d1;        /* darker blue on hover */
+}
+
+/* For Firefox */
+.company-form {
+  scrollbar-width: thin;       /* thin scrollbar */
+  scrollbar-color: #0288d1 #f1f5f9; /* thumb + track */
+}

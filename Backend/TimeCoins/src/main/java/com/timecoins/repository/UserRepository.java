@@ -11,6 +11,9 @@ public interface UserRepository extends JpaRepository<WebUsers, Long>{
 	Optional<WebUsers> findByEmail(String email);
 	Optional<WebUsers> findByUsername(String username);
     Optional<WebUsers> findByResetToken(String token);
-    List<WebUsers> findByUsernameContainingIgnoreCaseOrFullNameContainingIgnoreCase(String username, String fullName);
+    List<WebUsers> findTop10ByUsernameContainingIgnoreCaseOrFullNameContainingIgnoreCase(
+    		String username, 
+    		String fullName
+    		);
 
 }

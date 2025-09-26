@@ -18,6 +18,7 @@ const MarketTrendPage = ({ user }) => {
   const [range, setRange] = useState("1m");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [companyList, setCompanyDetail] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -106,7 +107,7 @@ const MarketTrendPage = ({ user }) => {
             </ResponsiveContainer>
           )}
         </div>
-        <CompanyList />
+        <CompanyList setCompanyDetail={setCompanyDetail} companyList={companyList}/>
       </div>
     </div>
   );

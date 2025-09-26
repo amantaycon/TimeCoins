@@ -2,19 +2,32 @@ import React, { useEffect, useState } from "react";
 import UserCard from "./UserCard";
 import axios from "../axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotificationUsers } from "../store/notificationSlice";
 
 const UserListPanel = ({ selectedUser }) => {
+  const user = useSelector((state) => state.auth.user);
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
   const [frequentUsers, setFrequentUsers] = useState([]); // keep a backup
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
 
   // Load frequent users initially
   const loadFrequentUsers = async () => {
     try {
       const res = await axios.post("/u/message/listpanel");
-      setUsers(res.data.content || []);
-      setFrequentUsers(res.data.content || []); // store original list
+      const otherUsers = res.data.content;
+      setUsers(otherUsers || []);
+      setFrequentUsers(otherUsers || []); // store original list
+      const notificationUserIds = otherUsers
+                .filter((u) => u.hasSeen === false)
+                .map((u) => u.userId);
+      
+              // Update redux globally
+              dispatch(setNotificationUsers(notificationUserIds));
+
     } catch (error) {
       console.error(
         "Freq user History List API error:",
@@ -61,12 +74,12 @@ const UserListPanel = ({ selectedUser }) => {
         onChange={(e) => setSearch(e.target.value)}
       />
       <div className="user-list">
-        {users.map((user, idx) => (
+        {users.map((u, idx) => (u.userId != user.id &&
           <UserCard
             key={idx}
-            user={user}
-            isSelected={selectedUser?.username === user.username}
-            onClick={() => {navigate(`/${user.username}/message`)}}
+            user={u}
+            isSelected={selectedUser?.username === u.username}
+            onClick={() => {navigate(`/${u.username}/message`)}}
           />
         ))}
       </div>

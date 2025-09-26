@@ -64,7 +64,7 @@ public class WebUsers {
         this.bio = "";
         this.timeCoinsValueAlert = true;
         this.darkMode = false;
-        this.notification = false;
+        this.notification = true;
         this.admin = false;
     }
 }

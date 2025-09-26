@@ -14,17 +14,29 @@ import { HeadNav } from "./component/Component";
 import axios from "./axios";
 import AvatarColor from "./component/AvatarColor";
 import FloatingPopup from "./component/FloatingPopup";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotificationUsers } from "./store/notificationSlice";
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
   const [freqUser, setFreqUser] = useState([]);
+  const dispatch = useDispatch();
+  const notificationUsers = useSelector((state) => state.notifications.notificationUsers);
 
   useEffect(() => {
     const fetchFreqUsers = async () => {
       try {
         const response = await axios.post("/u/message/listpanel");
-        setFreqUser(response.data.content); // assuming it's a Spring `Page` object
+        const otherUsers = response.data.content;
+        setFreqUser(otherUsers); // assuming it's a Spring `Page` object
+
+        const notificationUserIds = otherUsers
+          .filter((u) => u.hasSeen === false)
+          .map((u) => u.userId);
+
+        // Update redux globally
+        dispatch(setNotificationUsers(notificationUserIds));
+
       } catch (error) {
         console.error(
           "Freq user History List API error:",
@@ -117,20 +129,20 @@ const Dashboard = () => {
               <div className="user-history-section">
                 <h2 className="section-title">User History</h2>
                 <div className="dashboard-user-list">
-                  {freqUser.map((user, index) => (
-                    <Link to={`/${user.username}/message`} key={index} className="user-card pointer positionrelative">
-                      {user.unreadCount != 0?<span className="badge">{user.unreadCount}</span>:<></>}
+                  {freqUser.map((users, index) => (
+                    <Link to={`/${users.username}/message`} key={index} className="user-card pointer positionrelative">
+                      {user.webNotification && notificationUsers.some((u) => u === users.userId) && <span className="badge"></span>}
                       
                       <div
                         className="avatar"
-                        style={{ backgroundColor: AvatarColor(user.userId) }}
+                        style={{ backgroundColor: AvatarColor(users.userId) }}
                       >
-                        {user.fullName.charAt(0).toUpperCase()}
+                        {users.fullName.charAt(0).toUpperCase()}
                       </div>
 
                       <div className="user-info">
-                        <div className="user-name">{user.fullName}</div>
-                        <div className="user-username">@{user.username}</div>
+                        <div className="user-name">{users.fullName}</div>
+                        <div className="user-username">@{users.username}</div>
                       </div>
                     </Link>
                   ))}

@@ -87,3 +87,65 @@
   font-size: 1rem;
   font-weight: 500;
 }
+/* Actions Wrapper */
+.company-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Approve Button */
+.approve-btn {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.approve-btn1:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* Vote Buttons */
+.vote-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.upvote-btn,
+.downvote-btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Upvote */
+.upvote-btn {
+  background: #38ef7d;
+  color: white;
+}
+
+.upvote-btn:hover {
+  background: #2ecc71;
+  transform: scale(1.05);
+}
+
+/* Downvote */
+.downvote-btn {
+  background: #ff5e62;
+  color: white;
+}
+
+.downvote-btn:hover {
+  background: #e74c3c;
+  transform: scale(1.05);
+}

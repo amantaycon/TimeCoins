@@ -3,6 +3,8 @@ import MessageInput from "./MessageInput";
 import axiosInstance from "../axios";
 import MessageContent from "./MessageContent";
 import { useWebSocket } from "../context/WebSocketContext";
+import { useDispatch } from "react-redux";
+import { addNotificationUser, removeNotificationUser } from "../store/notificationSlice";
 
 const formatTime = (timestamp) => {
   const date = new Date(timestamp);
@@ -20,6 +22,17 @@ const MessageBox = ({ selectedUser, user, onBack }) => {
   const { subscribe, connected } = useWebSocket();
   const messagesEndRef = useRef(null);
   const historyRef = useRef(null);
+  const dispatch = useDispatch();
+  let page = 0;
+
+  // 🔹 Refs to always hold latest values
+  const selectedUserRef = useRef(selectedUser);
+  const isAtBottomRef = useRef(() => true);
+  const scrollToBottomRef = useRef(() => {});
+
+  useEffect(() => {
+    selectedUserRef.current = selectedUser;
+  }, [selectedUser]);
 
   // Auto scroll logic
   const scrollToBottom = (smooth = false) => {
@@ -27,29 +40,38 @@ const MessageBox = ({ selectedUser, user, onBack }) => {
       behavior: smooth ? "smooth" : "auto",
     });
   };
+  scrollToBottomRef.current = scrollToBottom;
 
   const isAtBottom = () => {
     if (!historyRef.current) return true;
     const { scrollTop, clientHeight, scrollHeight } = historyRef.current;
-    return scrollHeight - scrollTop <= clientHeight + 10; // small buffer
+    return scrollHeight - scrollTop <= clientHeight + 10;
   };
+  isAtBottomRef.current = isAtBottom;
 
   // Handle incoming messages
   useEffect(() => {
     if (!connected) return;
 
     const subscription = subscribe("/user/queue/messages", (message) => {
-      setMessages((prev) => [...prev, message]);
+      const currentUser = selectedUserRef.current;
 
-      if (isAtBottom()) {
-        setTimeout(() => scrollToBottom(true), 50);
+      console.log(message)
+      if (message.type === "Money" || (currentUser && message.senderId === currentUser.id)) {
+        setMessages((prev) => [...prev, message]);
+      } else {
+        dispatch(addNotificationUser(message.senderId));
+      }
+
+      if (isAtBottomRef.current()) {
+        setTimeout(() => scrollToBottomRef.current(true), 50);
       } else {
         setShowNewMsgAlert(true);
       }
     });
 
     return () => subscription && subscription.unsubscribe();
-  }, [connected, subscribe]);
+  }, [connected, subscribe, dispatch]);
 
   // Detect manual scroll
   useEffect(() => {
@@ -57,21 +79,35 @@ const MessageBox = ({ selectedUser, user, onBack }) => {
     if (!historyEl) return;
 
     const handleScroll = () => {
-      if (isAtBottom()) {
-        setShowNewMsgAlert(false); // hide badge when at bottom
+      if (isAtBottomRef.current()) {
+        setShowNewMsgAlert(false);
       }
     };
 
     historyEl.addEventListener("scroll", handleScroll);
     return () => historyEl.removeEventListener("scroll", handleScroll);
-  }, [historyRef]);
+  }, []);
 
   // Fetch history
   const messageHistory = async (id) => {
     try {
-      const res = await axiosInstance.post(`/u/message/history?id=${id}`);
-      setMessages(res.data.content);
-      setTimeout(scrollToBottom, 100); // scroll after loading history
+      const res = await axiosInstance.post(`/u/message/history?id=${id}&&page=${page}`);
+      const loadedMessages = res.data.content;
+
+      setMessages(loadedMessages);
+
+      // remove from notification list
+      dispatch(removeNotificationUser(id));
+
+      if (loadedMessages.length > 0) {
+        const receivedMessages = loadedMessages.filter((msg) => msg.receiverId === user.id);
+        const lastMessage = receivedMessages[receivedMessages.length - 1];
+        if (lastMessage) {
+          await axiosInstance.put(`/u/message/${lastMessage.id}/seen`);
+        }
+      }
+
+      setTimeout(() => scrollToBottomRef.current(), 100);
     } catch (error) {
       console.log(error);
     }
@@ -98,25 +134,16 @@ const MessageBox = ({ selectedUser, user, onBack }) => {
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`message-card ${
-                  msg.senderId === user.id ? "me" : "other"
-                }`}
+                className={`message-card ${msg.senderId === user.id ? "me" : "other"}`}
               >
                 <MessageContent msg={msg} />
-
                 <div className="message-meta">
                   <span>{formatDate(msg.timestamp)}</span> ·{" "}
                   <span>{formatTime(msg.timestamp)}</span>
                 </div>
                 <div className="delivery-status">
-                  <div className="delivery-status">
-                    {msg.senderId === user.id &&
-                      (msg.read
-                        ? "Seen ✓✓"
-                        : msg.delivered
-                        ? "Delivered ✓"
-                        : "")}
-                  </div>
+                  {msg.senderId === user.id &&
+                    (msg.delivered ? "✓" : "")}
                 </div>
               </div>
             ))}
@@ -128,7 +155,7 @@ const MessageBox = ({ selectedUser, user, onBack }) => {
             <div
               className="new-message-badge"
               onClick={() => {
-                scrollToBottom(true);
+                scrollToBottomRef.current(true);
                 setShowNewMsgAlert(false);
               }}
             >
