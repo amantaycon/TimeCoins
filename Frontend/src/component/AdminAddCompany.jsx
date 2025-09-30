@@ -20,10 +20,21 @@ const AdminAddCompany = () => {
   });
 
   const handleChange = (e) => {
-    setCompany({ ...company, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+
+    if (type === "number") {
+      const num = value === "" ? "" : parseFloat(value);
+
+      // allow empty for editing, or numbers >= 0
+      if (value === "" || num >= 0) {
+        setCompany({ ...company, [name]: value });
+      }
+    } else {
+      setCompany({ ...company, [name]: value });
+    }
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       companyName: company.name,
@@ -33,9 +44,9 @@ const AdminAddCompany = () => {
       totalToken: company.totalToken,
       email: company.email,
       website: company.website,
-    }
-    const res = await axiosInstance.post('/value/company/add', data);
-    setCompanyDetail((prev)=>[...prev, res.data]);
+    };
+    const res = await axiosInstance.post("/value/company/add", data);
+    setCompanyDetail((prev) => [...prev, res.data]);
     // 🚀 Here you’ll make your API call to save the company details
     setCompany({
       name: "",
@@ -93,6 +104,7 @@ const AdminAddCompany = () => {
                   name="sharePrice"
                   value={company.sharePrice}
                   onChange={handleChange}
+                  onWheel={(e) => e.currentTarget.blur()}
                   required
                 />
 
@@ -103,6 +115,7 @@ const AdminAddCompany = () => {
                   name="shareToken"
                   value={company.shareToken}
                   onChange={handleChange}
+                  onWheel={(e) => e.currentTarget.blur()}
                   required
                 />
 
@@ -113,6 +126,7 @@ const AdminAddCompany = () => {
                   name="totalToken"
                   value={company.totalToken}
                   onChange={handleChange}
+                  onWheel={(e) => e.currentTarget.blur()}
                   required
                 />
 
@@ -151,7 +165,10 @@ const AdminAddCompany = () => {
         )}
 
         {/* List of Companies */}
-        <CompanyList setCompanyDetail={setCompanyDetail} companyList={companyList}/>
+        <CompanyList
+          setCompanyDetail={setCompanyDetail}
+          companyList={companyList}
+        />
       </div>
     </>
   );

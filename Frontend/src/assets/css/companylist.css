@@ -66,9 +66,10 @@
 }
 
 .company-name {
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #222;
+  text-align: start;
 }
 
 .company-detail {
@@ -214,4 +215,11 @@
   font-style: italic;
   color: #555;
   margin-top: 2px;
+}
+
+.hr {
+  border: none;              /* remove default border */
+  height: 2px;               /* thickness */
+  background-color: #333;    /* color */
+  margin: 20px 0;            /* space above and below */
 }

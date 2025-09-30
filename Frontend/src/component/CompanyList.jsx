@@ -4,18 +4,18 @@ import { useSelector } from "react-redux";
 import axiosInstance from "../axios";
 
 const gradients = [
-  "linear-gradient(90deg, #667eea, #764ba2)", // purple-blue
-  "linear-gradient(90deg, #ff9966, #ff5e62)", // orange-red
-  "linear-gradient(90deg, #56ccf2, #2f80ed)", // light blue
-  "linear-gradient(90deg, #11998e, #38ef7d)", // green
-  "linear-gradient(90deg, #f7971e, #ffd200)", // yellow-orange
+  "linear-gradient(90deg, #667eea, #764ba2)",
+  "linear-gradient(90deg, #ff9966, #ff5e62)",
+  "linear-gradient(90deg, #56ccf2, #2f80ed)",
+  "linear-gradient(90deg, #11998e, #38ef7d)",
+  "linear-gradient(90deg, #f7971e, #ffd200)",
 ];
 
 const CompanyList = ({ companyList, setCompanyDetail }) => {
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    const companiesName = async () => {
+    const fetchCompanies = async () => {
       try {
         const res = await axiosInstance.get("/value/company/list");
         setCompanyDetail(res.data);
@@ -23,8 +23,7 @@ const CompanyList = ({ companyList, setCompanyDetail }) => {
         console.log(error);
       }
     };
-
-    companiesName();
+    fetchCompanies();
   }, []);
 
   const handleApprove = async (id) => {
@@ -39,10 +38,7 @@ const CompanyList = ({ companyList, setCompanyDetail }) => {
 
   const handleVote = async (id, type) => {
     try {
-      const voteData = {
-        companyId: id,
-        userVote: type,
-      };
+      const voteData = { companyId: id, userVote: type };
       await axiosInstance.post(`/u/add-or-update`, voteData);
       const res = await axiosInstance.get("/value/company/list");
       setCompanyDetail(res.data);
@@ -53,7 +49,7 @@ const CompanyList = ({ companyList, setCompanyDetail }) => {
 
   return (
     <div className="company-list-wrapper">
-      <h1 className="company-header">Coin Linked Companies</h1>
+      <h1 className="company-header">📊 Coin Linked Companies</h1>
 
       <div className="company-list">
         {companyList && companyList.length > 0 ? (
@@ -70,7 +66,7 @@ const CompanyList = ({ companyList, setCompanyDetail }) => {
 
             return (
               <div key={company.id} className="company-card">
-                {/* Progress Bar (Shares %) */}
+                {/* Progress Bar */}
                 <div className="progress-bar">
                   <div
                     className="progress-fill"
@@ -85,12 +81,26 @@ const CompanyList = ({ companyList, setCompanyDetail }) => {
                   </div>
                 </div>
 
-                {/* Company Details */}
+                {/* Company Info */}
                 <div className="company-content">
                   <div>
                     <h2 className="company-name">{company.companyName}</h2>
                     <p className="company-detail">
-                      Ticker: {company.tickerSymbol}
+                      <strong>Ticker:</strong> {company.tickerSymbol}
+                    </p>
+                    <p className="company-detail">
+                      <strong>Email:</strong>{" "}
+                      <a href={`mailto:${company.email}`}>{company.email}</a>
+                    </p>
+                    <p className="company-detail">
+                      <strong>Website:</strong>{" "}
+                      <a
+                        href={company.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {company.website}
+                      </a>
                     </p>
                   </div>
                   <p className="company-date">
@@ -98,32 +108,27 @@ const CompanyList = ({ companyList, setCompanyDetail }) => {
                   </p>
                 </div>
 
+                <hr className="hr"/>
+
                 {/* Approval + Voting */}
                 <div className="company-actions">
-                  {/* Approval section */}
-                  {company.approve ? (
-                    <button className="approve-btn" disabled>
-                      ✅ Approved
-                    </button>
-                  ) : user?.admin ? (
-                    <button
-                      className={
-                        "approve-btn " + (user?.admin ? "approve-btn1" : "")
-                      }
-                      onClick={() => handleApprove(company.id)}
-                    >
-                      Approve
-                    </button>
-                  ) : (
-                    <button className="approve-btn" disabled>
-                      ❌ Not Approved
-                    </button>
-                  )}
+                  <div className="approval-section">
+                    {company.approve ? (
+                      <span className="approved">✅ Approved</span>
+                    ) : user?.admin ? (
+                      <button
+                        className="approve-btn approve-btn1"
+                        onClick={() => handleApprove(company.id)}
+                      >
+                        Approve
+                      </button>
+                    ) : (
+                      <span className="not-approved">❌ Not Approved</span>
+                    )}
+                  </div>
 
-                  {/* Voting section */}
                   <div className="vote-section">
                     {company.userVote ? (
-                      // ✅ If user already voted → show percentages
                       <div className="vote-result">
                         <div className="vote-bar">
                           <div
@@ -147,7 +152,6 @@ const CompanyList = ({ companyList, setCompanyDetail }) => {
                         </p>
                       </div>
                     ) : (
-                      // ❌ If user hasn’t voted → show buttons
                       <div className="vote-buttons">
                         <button
                           className="upvote-btn"

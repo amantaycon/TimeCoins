@@ -2,6 +2,9 @@ package com.timecoins.config;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+
+import java.math.BigDecimal;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -52,6 +55,51 @@ public class MailService {
             mailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to send password reset email", e);
+        }
+    }
+    
+    public void sendCompanyVotingAlertEmail(
+            String to,
+            String username,
+            String companyName,
+            String tickerSymbol,
+            BigDecimal sharePercentage,
+            Long generateTimeCoins,
+            String companyEmail,
+            String companyWebsite
+    ) {
+        // Format numbers cleanly
+        String formattedShare = sharePercentage.stripTrailingZeros().toPlainString();
+        String formattedCoins = String.format("%,d", generateTimeCoins); // adds commas
+
+        // voting link (can be customized)
+        String voteLink = "http://localhost:5173/u/market/trends";
+
+        String htmlContent = String.format(
+                Aleart_Viting_HTML_TEMPLATE,
+                username,
+                companyName,
+                tickerSymbol,
+                formattedShare,
+                formattedCoins,
+                companyEmail,
+                companyWebsite,
+                companyWebsite,
+                voteLink
+        );
+
+        MimeMessage message = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom("sacoser3@gmail.com"); // official sender
+            helper.setTo(to);
+            helper.setSubject("New Voting Alert - " + companyName);
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
         }
     }
 
@@ -174,6 +222,49 @@ public class MailService {
     		</body>
     		</html>
     		""";
+    
+    private static final String Aleart_Viting_HTML_TEMPLATE = """
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #f9f9f9; }
+                    .container { max-width: 600px; margin: auto; padding: 20px; background: #fff; border: 1px solid #ddd; border-radius: 10px; }
+                    h2 { color: #2C3E50; }
+                    .highlight { color: #2980B9; font-weight: bold; }
+                    .btn {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        margin-top: 20px;
+                        background-color: #2980B9;
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                    }
+                    .footer { margin-top: 30px; font-size: 12px; color: #888; text-align: center; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h2>New Company Added for TimeCoins Voting</h2>
+                    <p>Hello <b>%s</b>,</p>
+                    <p>A new company has been added for voting. Please review the details below:</p>
 
+                    <p><span class="highlight">Company Name:</span> %s</p>
+                    <p><span class="highlight">Ticker Symbol:</span> %s</p>
+                    <p><span class="highlight">Share Percentage:</span> %s%%</p>
+                    <p><span class="highlight">Generated TimeCoins:</span> %s</p>
+                    <p><span class="highlight">Company Email:</span> %s</p>
+                    <p><span class="highlight">Website:</span> <a href="%s">%s</a></p>
+
+                    <a class="btn" href="%s">Cast Your Vote</a>
+
+                    <div class="footer">
+                        <p>Need help? Contact us at <a href="mailto:support@timecoins.com">support@timecoins.com</a></p>
+                        <p>© 2025 TimeCoins. All rights reserved.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """;
 }
 

@@ -88,6 +88,7 @@ const WalletPage = () => {
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(Math.max(0, Number(e.target.value)))}
+                onWheel={(e) => e.currentTarget.blur()}
                 placeholder="Enter TimeCoins"
                 className="flex-1 px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300 outline-none"
               />
