@@ -16,10 +16,13 @@ import com.timecoins.dto.AggregatedCoinHistoryDto;
 import com.timecoins.dto.CompanyListDto;
 import com.timecoins.model.CoinsValueHistory;
 import com.timecoins.model.CompanyList;
+import com.timecoins.model.CompanyVote;
 import com.timecoins.model.TotalTimeCoins;
+import com.timecoins.model.VotingType;
 import com.timecoins.model.WebUsers;
 import com.timecoins.repository.CoinsValueHistoryRepository;
 import com.timecoins.repository.CompanyListRepository;
+import com.timecoins.repository.CompanyVoteRepository;
 import com.timecoins.repository.TotalTimeCoinsRepository;
 import com.timecoins.repository.UserRepository;
 
@@ -33,6 +36,7 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
     private final CoinsValueHistoryRepository coinsValueHistoryRepository;
     private final TotalTimeCoinsRepository totalTimeCoinsRepository;
     private final UserRepository userRepository;
+    private final CompanyVoteRepository voteRepository;
     
     @Override
     public CompanyListDto addCompany(CompanyListDto companyDetails, Long userId) {
@@ -117,26 +121,44 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
     }
     
     @Override
-    public List<CompanyListDto> getListOfCompany(){
-    	List<CompanyList> companyLists = companyListRepository.findAll();
-    	
-    	return companyLists.stream()
-    			.map(item-> CompanyListDto.builder()
-    					.id(item.getId())
-    					.companyName(item.getCompanyName())
-    					.tickerSymbol(item.getTickerSymbol())
-    					.sharesPercentage(
-    	                        item.getShareToken()
-    	                               .divide(item.getTotalToken(), 6, RoundingMode.HALF_UP)
-    	                               .multiply(BigDecimal.valueOf(100))
-    	                )
-    					.totalValueInTimecoins(item.getTimeCoins())
-    					.createAt(item.getCreatedAt())
-    					.approve(item.getApprove())
-    					.email(item.getEmail())
-    					.website(item.getWebsite())
-    					.build()).toList();
+    public List<CompanyListDto> getListOfCompany(Long userId) {
+        List<CompanyList> companyLists = companyListRepository.findAll();
+
+        return companyLists.stream()
+                .map(item -> {
+                    Long upVotes = voteRepository.countUpVotes(item.getId());
+                    Long downVotes = voteRepository.countDownVotes(item.getId());
+
+                    VotingType userVote = null;
+                    if (userId != null) {
+                        userVote = voteRepository.findByCompanyAndUserId(item, userId)
+                                .map(CompanyVote::getVote)
+                                .orElse(null);
+                    }
+
+                    return CompanyListDto.builder()
+                            .id(item.getId())
+                            .companyName(item.getCompanyName())
+                            .tickerSymbol(item.getTickerSymbol())
+                            .sharesPercentage(
+                                    item.getShareToken()
+                                            .divide(item.getTotalToken(), 6, RoundingMode.HALF_UP)
+                                            .multiply(BigDecimal.valueOf(100))
+                            )
+                            .totalValueInTimecoins(item.getTimeCoins())
+                            .createAt(item.getCreatedAt())
+                            .approve(item.getApprove())
+                            .email(item.getEmail())
+                            .website(item.getWebsite())
+                            .upVotes(upVotes)
+                            .downVotes(downVotes)
+                            .userVote(userVote)
+                            .build();
+                })
+                .toList();
     }
+
+
     
     @Override
     public List<AggregatedCoinHistoryDto> getListOfValueHistory(String range) {

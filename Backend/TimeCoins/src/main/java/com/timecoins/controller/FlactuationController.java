@@ -33,8 +33,10 @@ public class FlactuationController {
 	}
 	
 	@GetMapping("/company/list")
-	public List<CompanyListDto> getcompanyList(){
-		return valueFluctuationServiceIn.getListOfCompany();
+	public List<CompanyListDto> getcompanyList(Authentication authentication){
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+	    Long userId = userDetails.getId();
+		return valueFluctuationServiceIn.getListOfCompany(userId);
 	}
 	
 	@GetMapping("/inrupees")

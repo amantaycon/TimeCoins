@@ -9,7 +9,7 @@ import com.timecoins.dto.CompanyListDto;
 public interface ValueFluctuationServiceIn {
 	public CompanyListDto addCompany(CompanyListDto companyDetails,Long userId);
 	public BigDecimal getCoinValueInRuppees();
-	public List<CompanyListDto> getListOfCompany();
+	public List<CompanyListDto> getListOfCompany(Long userId);
 	public List<AggregatedCoinHistoryDto> getListOfValueHistory(String range);
 	public boolean approveCompany(Long id, Long userId);
 }

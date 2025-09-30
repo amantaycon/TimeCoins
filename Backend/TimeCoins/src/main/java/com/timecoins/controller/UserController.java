@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.timecoins.dto.ProfileDetailDto;
 import com.timecoins.dto.UsersDetails;
+import com.timecoins.dto.VotingDto;
+import com.timecoins.model.VotingType;
+import com.timecoins.service.CompanyVotingServiceIn;
 import com.timecoins.service.CustomUserDetails;
 import com.timecoins.service.UserServiceIn;
 
@@ -25,7 +28,24 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	
 	private final UserServiceIn userService;
+	private final CompanyVotingServiceIn companyVotingService;
+	
+	
+	@PostMapping("/add-or-update")
+    public VotingDto addOrUpdateVote(
+            @RequestBody VotingDto voteDto,
+            Authentication authentication
+    ) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long loggedInUserId = customUserDetails.getId();
 
+        Long companyId = voteDto.getCompanyId();
+        VotingType voteType = voteDto.getUserVote();
+
+        return companyVotingService.addOrUpdateVote(loggedInUserId, companyId, voteType);
+    }
+	
+	
 	@PostMapping("/islogin")
     public boolean isLogin() {
 		return true;

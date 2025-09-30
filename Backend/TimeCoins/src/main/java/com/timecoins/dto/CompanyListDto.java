@@ -3,6 +3,8 @@ package com.timecoins.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.timecoins.model.VotingType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +25,8 @@ public class CompanyListDto {
 	private String website;
 	private Boolean approve;
 	private LocalDateTime createAt;
+	
+	private Long upVotes;
+    private Long downVotes;
+    private VotingType userVote; // null if user has not voted
 }

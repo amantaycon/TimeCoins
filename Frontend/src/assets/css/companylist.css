@@ -149,3 +149,69 @@
   background: #e74c3c;
   transform: scale(1.05);
 }
+
+
+/* Align actions (Approve + Vote section) in one row */
+.company-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+/* Voting section wrapper */
+.vote-section {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Vote buttons aligned in one row */
+.vote-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* Vote result (percentage bar + text) */
+.vote-result {
+  width: 100%;
+  text-align: right;
+}
+
+/* Horizontal bar for up/down percentages */
+.vote-bar {
+  display: flex;
+  height: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+/* Upvote portion (green) */
+.vote-up {
+  background: linear-gradient(90deg, #38ef7d, #11998e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Downvote portion (red) */
+.vote-down {
+  background: linear-gradient(90deg, #ff5e62, #ff9966);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.4s ease-in-out;
+}
+
+/* "You voted" text */
+.your-vote {
+  font-size: 13px;
+  font-style: italic;
+  color: #555;
+  margin-top: 2px;
+}
