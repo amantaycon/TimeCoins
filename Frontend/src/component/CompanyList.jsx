@@ -89,6 +89,9 @@ const CompanyList = ({ companyList, setCompanyDetail }) => {
                       <strong>Ticker:</strong> {company.tickerSymbol}
                     </p>
                     <p className="company-detail">
+                      <strong>Mapped TimeCoins:</strong> {company.totalValueInTimecoins}
+                    </p>
+                    <p className="company-detail">
                       <strong>Email:</strong>{" "}
                       <a href={`mailto:${company.email}`}>{company.email}</a>
                     </p>

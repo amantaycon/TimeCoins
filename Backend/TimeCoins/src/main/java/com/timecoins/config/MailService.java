@@ -2,21 +2,25 @@ package com.timecoins.config;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.timecoins.model.WebUsers;
+import com.timecoins.repository.UserRepository;
+
 @Service
+@RequiredArgsConstructor
 public class MailService {
 
     private final JavaMailSender mailSender;
-
-    public MailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    private final UserRepository userRepository;
 
     public void sendHtmlVerificationEmail(String to, String name, String token) {
         String link = "http://localhost:5173/u/verify?token=" + token;
@@ -58,50 +62,59 @@ public class MailService {
         }
     }
     
-    public void sendCompanyVotingAlertEmail(
-            String to,
-            String username,
+    @Async // ensures sending happens in background (non-blocking)
+    public void sendCompanyVotingAlertEmailToAllUsers(
             String companyName,
             String tickerSymbol,
             BigDecimal sharePercentage,
-            Long generateTimeCoins,
+            BigDecimal generateTimeCoins,
             String companyEmail,
             String companyWebsite
     ) {
+        // Fetch all users from DB
+        List<WebUsers> users = userRepository.findAll();
+
         // Format numbers cleanly
         String formattedShare = sharePercentage.stripTrailingZeros().toPlainString();
-        String formattedCoins = String.format("%,d", generateTimeCoins); // adds commas
+        String formattedCoins = generateTimeCoins.stripTrailingZeros().toPlainString();
 
-        // voting link (can be customized)
+        // Voting link (customize if needed)
         String voteLink = "http://localhost:5173/u/market/trends";
 
-        String htmlContent = String.format(
-                Aleart_Viting_HTML_TEMPLATE,
-                username,
-                companyName,
-                tickerSymbol,
-                formattedShare,
-                formattedCoins,
-                companyEmail,
-                companyWebsite,
-                companyWebsite,
-                voteLink
-        );
+        for (WebUsers user : users) {
+        	if (Boolean.FALSE.equals(user.getTimeCoinsValueAlert())) continue;
+            try {
+                // Prepare personalized email content
+                String htmlContent = String.format(
+                        Aleart_Viting_HTML_TEMPLATE,
+                        user.getFullName(),
+                        companyName,
+                        tickerSymbol,
+                        formattedShare,
+                        formattedCoins,
+                        companyEmail,
+                        companyWebsite,
+                        companyWebsite,
+                        voteLink
+                );
 
-        MimeMessage message = mailSender.createMimeMessage();
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom("sacoser3@gmail.com"); // official sender
-            helper.setTo(to);
-            helper.setSubject("New Voting Alert - " + companyName);
-            helper.setText(htmlContent, true);
+                helper.setFrom("sacoser3@gmail.com"); // official sender
+                helper.setTo(user.getEmail());        // send to each user
+                helper.setSubject("New Voting Alert - " + companyName);
+                helper.setText(htmlContent, true);
 
-            mailSender.send(message);
-        } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send email", e);
+                mailSender.send(message);
+
+            } catch (MessagingException e) {
+                // log error but continue sending to others
+                System.err.println("Failed to send email to " + user.getEmail() + ": " + e.getMessage());
+            }
         }
     }
+
 
 
     private static final String HTML_TEMPLATE = """

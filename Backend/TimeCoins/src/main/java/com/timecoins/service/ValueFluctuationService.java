@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.timecoins.config.MailService;
 import com.timecoins.dto.AggregatedCoinHistoryDto;
 import com.timecoins.dto.CompanyListDto;
 import com.timecoins.model.CoinsValueHistory;
@@ -37,6 +38,7 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
     private final TotalTimeCoinsRepository totalTimeCoinsRepository;
     private final UserRepository userRepository;
     private final CompanyVoteRepository voteRepository;
+    private final MailService mailService;
     
     @Override
     public CompanyListDto addCompany(CompanyListDto companyDetails, Long userId) {
@@ -95,6 +97,16 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
     			.approve(false)
     			.build()
     	);
+    	
+    	mailService.sendCompanyVotingAlertEmailToAllUsers(
+    			company.getCompanyName(),
+    			company.getTickerSymbol(), 
+    			company.getShareToken()
+                .divide(company.getTotalToken(), 6, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100)),
+                company.getTimeCoins(),
+                company.getEmail(), 
+                company.getWebsite());
     	
     	// 4. Return DTO
         return CompanyListDto.builder()
