@@ -760,3 +760,8 @@ a{
     height: 60px;
   }
 }
+
+
+.tx-type.FAILED{
+  color: rgb(223, 0, 0);
+}

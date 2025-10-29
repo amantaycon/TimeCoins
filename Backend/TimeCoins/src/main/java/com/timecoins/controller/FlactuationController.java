@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.timecoins.dto.AggregatedCoinHistoryDto;
 import com.timecoins.dto.CompanyListDto;
+import com.timecoins.dto.TimecoinsDto;
 import com.timecoins.service.CustomUserDetails;
 import com.timecoins.service.ValueFluctuationServiceIn;
 
@@ -75,6 +76,11 @@ public class FlactuationController {
 			) {
 		
 		return false;
+	}
+	
+	@GetMapping("/timecoins")
+	public TimecoinsDto getInfoTimecoins() {
+		return valueFluctuationServiceIn.getTimecoinsDetails();
 	}
 	
 }

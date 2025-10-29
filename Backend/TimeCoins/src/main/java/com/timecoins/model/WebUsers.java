@@ -45,6 +45,9 @@ public class WebUsers {
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private List<UserTransaction> receivedTransactions;
     
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    private List<WalletTransaction> receivedWalletTransactions;
+    
     private String bio;
     
     private Boolean darkMode;

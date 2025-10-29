@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.timecoins.dto.AggregatedCoinHistoryDto;
 import com.timecoins.dto.CompanyListDto;
+import com.timecoins.dto.TimecoinsDto;
 
 public interface ValueFluctuationServiceIn {
 	public CompanyListDto addCompany(CompanyListDto companyDetails,Long userId);
@@ -12,4 +13,5 @@ public interface ValueFluctuationServiceIn {
 	public List<CompanyListDto> getListOfCompany(Long userId);
 	public List<AggregatedCoinHistoryDto> getListOfValueHistory(String range);
 	public boolean approveCompany(Long id, Long userId);
+	public TimecoinsDto getTimecoinsDetails();
 }

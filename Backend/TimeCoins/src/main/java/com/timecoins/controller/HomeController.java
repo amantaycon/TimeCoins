@@ -21,6 +21,7 @@ import com.timecoins.dto.ChatUserSummary;
 import com.timecoins.dto.GetCoins;
 import com.timecoins.dto.MessageTemplate;
 import com.timecoins.dto.UserTransactionDto;
+import com.timecoins.dto.WalletTransactionDto;
 import com.timecoins.service.CustomUserDetails;
 import com.timecoins.service.DataHandleServicesIn;
 import com.timecoins.service.MessageServiceIn;
@@ -36,7 +37,7 @@ public class HomeController {
 	private final DataHandleServicesIn dataHandleServicesIn;
 	
 	@GetMapping("/u/external/transaction_list")
-	public Page<UserTransactionDto> getListOfOutsideTransation(
+	public Page<WalletTransactionDto> getListOfOutsideTransation(
 			@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             Authentication authentication
@@ -50,10 +51,12 @@ public class HomeController {
 	@PostMapping("/u/process/transaction")
 	public ResponseEntity<String> processTransaction(
 	        @RequestBody UserTransactionDto transactionDetails,
-	        Authentication authentication) {
+	        Authentication authentication) throws InterruptedException {
 
 	    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 	    Long userId = userDetails.getId();
+	    
+	    Thread.sleep(2000);
 
 	    // ✅ Only the logged-in user can be the sender
 	    if (!userId.equals(transactionDetails.getSenderId())) {

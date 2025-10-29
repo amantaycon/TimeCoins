@@ -10,4 +10,7 @@ import com.timecoins.model.CompanyList;
 public interface CompanyListRepository extends JpaRepository<CompanyList, Long> {
 	@Query(value = "SELECT AVG((share_price * share_token) / time_coins) FROM company_list", nativeQuery = true)
     BigDecimal calculateAverageCoinValue();
+	
+	@Query(value = "SELECT SUM(time_coins) FROM company_list", nativeQuery = true)
+	BigDecimal calculateTotalGeneratedTimecoins();
 }

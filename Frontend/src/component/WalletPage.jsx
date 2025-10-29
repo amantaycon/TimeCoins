@@ -5,6 +5,7 @@ import { Wallet } from "lucide-react";
 import { HeadNav } from "./Component";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import "../assets/css/wallet.css";
+import PayPalPayment from "./PayPalPayment";
 
 const WalletPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -14,19 +15,57 @@ const WalletPage = () => {
   const [transactions, setTransactions] = useState([]);
   const [payableInRupees, setPayableInRupees] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const fetchTransactions = async () => {
+    if (!hasMore || loading) return;
+    setLoading(true);
+
+    try {
+      const txRes = await axiosInstance.get(
+        `/u/external/transaction_list?page=${page}&size=10`
+      );
+
+      const newData = txRes.data?.content || [];
+      const meta = txRes.data?.page;
+      setTransactions((prev) => [...prev, ...newData]);
+      const nextPage = meta.number + 1;
+      setHasMore(nextPage < meta.totalPages);
+      setPage(nextPage);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 200
+      ) {
+        fetchTransactions();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [page, hasMore, loading]);
 
   useEffect(() => {
     const fetchWalletData = async () => {
       try {
         const balanceRes = await axiosInstance.get("/u/balance");
         setBalance(balanceRes.data?.coin || 0);
-
-        const txRes = await axiosInstance.get("/u/external/transaction_list");
-        setTransactions(txRes.data?.content || []);
       } catch (error) {
         console.error("Failed to fetch wallet data:", error);
-        setBalance(0);
-        setTransactions([]);
       }
     };
 
@@ -106,22 +145,55 @@ const WalletPage = () => {
         {/* Transaction History */}
         <div className="wallet-transactions bg-white rounded-2xl shadow p-6 mt-8">
           <h3 className="text-lg font-semibold mb-4">Transaction History</h3>
-          {transactions.length === 0 ? (
+
+          {transactions.length === 0 && !hasMore ? (
             <p className="text-gray-500">No transactions yet.</p>
           ) : (
             <ul className="divide-y">
               {transactions.map((tx, idx) => (
-                <li
-                  key={idx}
-                  className="transaction-item flex justify-between py-2 text-sm"
-                >
-                  <span className={`tx-type ${tx.type?.toLowerCase()}`}>
-                    {tx.type}
-                  </span>
-                  <span>₹{tx.amount}</span>
-                  <span>{new Date(tx.date).toLocaleString()}</span>
+                <li key={idx} className="py-3 text-sm text-gray-700">
+                  <p>
+                    <strong>Transaction ID:</strong> {tx.transactionId}
+                  </p>
+
+                  <div className="flex justify-between font-medium">
+                    <span
+                      className={`tx-type ${tx.transactionType?.toLowerCase()}`}
+                    >
+                      {tx.transactionType}:
+                    </span>
+                    <span>TC {tx.timecoins}</span>
+                  </div>
+
+                  <div className="mt-1 text-xs text-gray-500 space-y-1">
+                    <p>
+                      <strong>Description:</strong> {tx.description}
+                    </p>
+                    <p>
+                      <strong>Paid:</strong> {tx.localAmount} {tx.localCurrency}
+                    </p>
+                    <p>
+                      <strong>PayPal Tx ID:</strong> {tx.localTransationId}
+                    </p>
+                    <p>
+                      <strong>Date:</strong>{" "}
+                      {new Date(tx.transactionDate).toLocaleString()}
+                    </p>
+                  </div>
                 </li>
               ))}
+
+              {loading && (
+                <p className="text-center py-3 text-gray-500">
+                  Loading more...
+                </p>
+              )}
+
+              {!hasMore && (
+                <p className="text-center py-3 text-gray-400">
+                  No more transactions.
+                </p>
+              )}
             </ul>
           )}
         </div>
@@ -143,47 +215,10 @@ const WalletPage = () => {
 
             {/* PayPal Section */}
             <div style={{ marginTop: "20px" }}>
-              <PayPalScriptProvider
-                options={{
-                  "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID, // replace this
-                  currency: "USD",
-                }}
-              >
-                <PayPalButtons
-                  style={{ layout: "vertical", color: "blue", shape: "pill" }}
-                  forceReRender={[payableInRupees]}
-                  createOrder={(data, actions) => {
-                    const usdAmount = (payableInRupees / 88.78).toFixed(2);
-
-                    // PayPal will error if amount < 0.01
-                    if (usdAmount < 0.01) {
-                      alert("Amount too small for PayPal payment.");
-                      return;
-                    }
-
-                    return actions.order.create({
-                      intent: "CAPTURE",
-                      purchase_units: [
-                        {
-                          amount: {
-                            value: usdAmount,
-                            currency_code: "USD",
-                          },
-                        },
-                      ],
-                    });
-                  }}
-                  onApprove={async (data, actions) => {
-                    const details = await actions.order.capture();
-                    console.log("✅ Payment Approved:", details);
-                    handlePaymentSuccess(details); // your handler
-                  }}
-                  onError={(err) => {
-                    console.error("❌ PayPal Checkout Error:", err);
-                    alert("Payment failed. Please try again.");
-                  }}
-                />
-              </PayPalScriptProvider>
+              <PayPalPayment
+                payableInRupees={payableInRupees}
+                handlePaymentSuccess={handlePaymentSuccess}
+              />
             </div>
 
             {/* Cancel Button */}

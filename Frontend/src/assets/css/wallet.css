@@ -157,3 +157,24 @@
 .modal-actions .cancel-btn:hover {
   background: #d1d5db;
 }
+
+.transaction-card:hover {
+  transform: translateY(-2px);
+}
+
+.tx-badge {
+  letter-spacing: 0.3px;
+}
+.tx-type.deposit {
+  color: #10b981; /* Green */
+}
+
+.tx-type.withdraw {
+  color: #ef4444; /* Red */
+}
+
+.wallet-transactions li {
+  padding: 14px 0; /* spacing above/below each item */
+  border-bottom: 1px solid #e0e0e0; /* divider line */
+}
+

@@ -216,7 +216,7 @@ const TransactionHistoryPage = () => {
     if (s == "TRANSFER") {
       if (id == user.id) return "debit";
       else return "credit";
-    }
+    }else return s;
   };
 
   function formatDateTime(dateString) {

@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.timecoins.config.MailService;
 import com.timecoins.dto.AggregatedCoinHistoryDto;
 import com.timecoins.dto.CompanyListDto;
+import com.timecoins.dto.TimecoinsDto;
 import com.timecoins.model.CoinsValueHistory;
 import com.timecoins.model.CompanyList;
 import com.timecoins.model.CompanyVote;
@@ -39,6 +40,18 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
     private final UserRepository userRepository;
     private final CompanyVoteRepository voteRepository;
     private final MailService mailService;
+    
+    @Override
+    public TimecoinsDto getTimecoinsDetails() {
+    	
+    	TotalTimeCoins totalTimeCoins = totalTimeCoinsRepository.findById(1L)
+    			.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data is Missing"));
+    	
+    	return TimecoinsDto.builder()
+    	.totalTimeCoins(totalTimeCoins.getTimecoins())
+    	.remainingTimecoins(companyListRepository.calculateTotalGeneratedTimecoins())
+    	.build();
+    }
     
     @Override
     public CompanyListDto addCompany(CompanyListDto companyDetails, Long userId) {
