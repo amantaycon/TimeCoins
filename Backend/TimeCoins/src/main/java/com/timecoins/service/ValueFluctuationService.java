@@ -46,10 +46,11 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
     	
     	TotalTimeCoins totalTimeCoins = totalTimeCoinsRepository.findById(1L)
     			.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data is Missing"));
-    	
+        
     	return TimecoinsDto.builder()
-    	.totalTimeCoins(totalTimeCoins.getTimecoins())
-    	.remainingTimecoins(companyListRepository.calculateTotalGeneratedTimecoins())
+    	.totalTimeCoins(totalTimeCoins.getTotalTimecoins())
+    	.remainingTimecoins(totalTimeCoins.getTimecoins())
+    	.currentCoinValue(getCoinValueInRuppees())
     	.build();
     }
     
@@ -142,6 +143,11 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
     @Override
     public BigDecimal getCoinValueInRuppees() {
     	CoinsValueHistory value = coinsValueHistoryRepository.findTopByOrderByIdDesc();
+    	
+        if (value == null) {
+            throw new IllegalStateException("No coin value history found!");
+        }
+        
     	return value.getValueInRupees();
     }
     
@@ -266,6 +272,7 @@ public class ValueFluctuationService implements ValueFluctuationServiceIn {
 
 	    // 4. Update total timecoins and company approval
 	    totalTimeCoins.setTimecoins(totalTimeCoins.getTimecoins().add(companyList.getTimeCoins()));
+	    totalTimeCoins.setTotalTimecoins(totalTimeCoins.getTotalTimecoins().add(companyList.getTimeCoins()));
 	    companyList.setApprove(true);
 
 	    // 5. Save both

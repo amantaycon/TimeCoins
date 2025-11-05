@@ -99,8 +99,11 @@
 
 /* === MODAL STYLES === */
 .modal-overlay {
+  height: 100vh;
+  width: 100%;
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   background: rgba(0,0,0,0.6);
   display: flex;
   justify-content: center;
@@ -178,3 +181,31 @@
   border-bottom: 1px solid #e0e0e0; /* divider line */
 }
 
+.success-box {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 350px;
+  width: 90%;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.3s ease-out;
+  position: relative;
+}
+
+.success-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #10b981; /* green */
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

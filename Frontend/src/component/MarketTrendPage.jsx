@@ -12,6 +12,7 @@ import axiosInstance from "../axios";
 import { HeadNav } from "./Component";
 import "../assets/css/markettrand.css";
 import CompanyList from "./CompanyList";
+import StockCoin from "./StockCoin";
 
 const MarketTrendPage = ({ user }) => {
   const [data, setData] = useState([]);
@@ -59,12 +60,10 @@ const MarketTrendPage = ({ user }) => {
     };
   }, [range]);
 
-  
-
   return (
     <div className="dashboard-bg">
       <HeadNav />
-
+      <StockCoin update={companyList}/>
       <div className="dashboard-container">
         <h1 className="dashboard-title">TimeCoins Market Trends</h1>
 
@@ -107,7 +106,10 @@ const MarketTrendPage = ({ user }) => {
             </ResponsiveContainer>
           )}
         </div>
-        <CompanyList setCompanyDetail={setCompanyDetail} companyList={companyList}/>
+        <CompanyList
+          setCompanyDetail={setCompanyDetail}
+          companyList={companyList}
+        />
       </div>
     </div>
   );

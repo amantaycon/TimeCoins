@@ -20,5 +20,6 @@ public class TotalTimeCoins {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private BigDecimal timecoins;
+	private BigDecimal timecoins; // this is reaming Timecoins which user bye
+	private BigDecimal TotalTimecoins; // This is total Timecoins generated 
 }

@@ -12,4 +12,5 @@ import lombok.Data;
 public class TimecoinsDto {
 	private BigDecimal totalTimeCoins;
 	private BigDecimal remainingTimecoins;
+	private BigDecimal currentCoinValue;
 }

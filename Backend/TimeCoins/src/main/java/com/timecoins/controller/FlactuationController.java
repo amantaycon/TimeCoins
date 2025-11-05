@@ -78,7 +78,7 @@ public class FlactuationController {
 		return false;
 	}
 	
-	@GetMapping("/timecoins")
+	@GetMapping("/timecoins/stock")
 	public TimecoinsDto getInfoTimecoins() {
 		return valueFluctuationServiceIn.getTimecoinsDetails();
 	}

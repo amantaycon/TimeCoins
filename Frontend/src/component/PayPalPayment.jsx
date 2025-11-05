@@ -16,7 +16,6 @@ export default function PayPalPayment({ payableInRupees, handlePaymentSuccess })
         amount: usdAmount,
       });
 
-      console.log("🟩 PayPal Order Created:", response.data);
       return response.data.orderId;
     } catch (error) {
       console.error("❌ Error creating PayPal order:", error);
